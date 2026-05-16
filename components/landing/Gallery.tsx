@@ -13,11 +13,12 @@ const FALLBACK_COLORS = [
 const FALLBACK_ICONS = ["⚽", "🌙", "🏆", "🎉", "🏖️"];
 
 const DEFAULT_GALLERY: GalleryItem[] = [
-  { id: "1", title: "ম্যাচের মুহূর্ত", imageUrl: "", description: "ক্রীড়া • ২০২৫" },
-  { id: "2", title: "ইফতার পার্টি ২০২৫", imageUrl: "", description: "ইভেন্ট • রমজান" },
-  { id: "3", title: "চ্যাম্পিয়নস কাপ", imageUrl: "", description: "টুর্নামেন্ট • ২০২৪" },
-  { id: "4", title: "ঈদ সেলিব্রেশন", imageUrl: "", description: "ইভেন্ট • ২০২৪" },
-  { id: "5", title: "পিকনিক ২০২৪", imageUrl: "", description: "আনন্দ • প্রকৃতি" },
+  { id: "1", title: "ম্যাচের মুহূর্ত", imageUrl: "/assets/image.jpeg", description: "ক্রীড়া • ২০২৫" },
+  { id: "2", title: "ইফতার পার্টি ২০২৫", imageUrl: "/assets/image1.jpeg", description: "ইভেন্ট • রমজান" },
+  { id: "3", title: "চ্যাম্পিয়নস কাপ", imageUrl: "/assets/image3.jpeg", description: "টুর্নামেন্ট • ২০২৪" },
+  { id: "4", title: "ঈদ সেলিব্রেশন", imageUrl: "/assets/image4.jpeg", description: "ইভেন্ট • ২০২৪" },
+  { id: "5", title: "পিকনিক ২০২৪", imageUrl: "/assets/image5.jpeg", description: "আনন্দ • প্রকৃতি" },
+  { id: "6", title: "ট্রেনিং সেশন", imageUrl: "/assets/image6.jpeg", description: "প্রস্তুতি • ২০২৫" },
 ];
 
 interface GalleryProps {
@@ -30,24 +31,9 @@ export default function Gallery({ items = DEFAULT_GALLERY }: GalleryProps) {
       <div className="max-w-6xl mx-auto">
         <SectionHeader tag="স্মৃতির ভাণ্ডার" title="ফটো গ্যালারি" />
 
-        <div
-          className="grid gap-3"
-          style={{
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gridTemplateRows: "220px 220px",
-          }}
-        >
-          {items.slice(0, 5).map((item, i) => (
-            <div
-              key={item.id}
-              className={`relative overflow-hidden group cursor-pointer ${
-                i === 0
-                  ? "col-span-2 row-span-2"
-                  : i === 1
-                  ? "col-span-2"
-                  : "col-span-1"
-              }`}
-            >
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {items.map((item, i) => (
+            <div key={item.id} className="relative overflow-hidden group cursor-pointer h-[220px]">
               {item.imageUrl ? (
                 <Image
                   src={item.imageUrl}
@@ -61,10 +47,10 @@ export default function Gallery({ items = DEFAULT_GALLERY }: GalleryProps) {
                     FALLBACK_COLORS[i % FALLBACK_COLORS.length]
                   } flex flex-col items-center justify-center transition-transform duration-500 group-hover:scale-105`}
                 >
-                  <span className="text-4xl mb-2">{FALLBACK_ICONS[i]}</span>
+                  <span className="text-4xl mb-2">{FALLBACK_ICONS[i % FALLBACK_ICONS.length]}</span>
                   <span
                     className="text-[#c9a227]/60 tracking-widest text-center px-4"
-                    style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: i === 0 ? "1.5rem" : "1rem" }}
+                    style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem" }}
                   >
                     {item.title}
                   </span>

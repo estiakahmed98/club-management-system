@@ -18,8 +18,11 @@ import type { ClubStats, Event, GalleryItem, HeroSlide, Match, MemberProfile } f
 // Replace these with real Prisma queries in your API routes / server actions
 
 async function getHeroSlides(): Promise<HeroSlide[]> {
-  // Example Prisma: return prisma.galleryItem.findMany({ where: { featured: true }, take: 5 })
-  return [];
+  return [
+    { id: "1", imageUrl: "/assets/image.jpeg", title: "মাঠের লড়াই" },
+    { id: "2", imageUrl: "/assets/image1.jpeg", title: "একতার শক্তি" },
+    { id: "3", imageUrl: "/assets/image3.jpeg", title: "ভবিষ্যতের স্বপ্ন" },
+  ];
 }
 
 async function getStats(): Promise<ClubStats> {
@@ -51,9 +54,14 @@ async function getRecentMatches(): Promise<Match[]> {
 }
 
 async function getGalleryItems(): Promise<GalleryItem[]> {
-  // Example Prisma:
-  // return prisma.galleryItem.findMany({ orderBy: { createdAt: "desc" }, take: 5 })
-  return [];
+  return [
+    { id: "1", title: "ম্যাচের মুহূর্ত", imageUrl: "/assets/image.jpeg", description: "ক্রীড়া • ২০২৫" },
+    { id: "2", title: "ইফতার পার্টি ২০২৫", imageUrl: "/assets/image1.jpeg", description: "ইভেন্ট • রমজান" },
+    { id: "3", title: "চ্যাম্পিয়নস কাপ", imageUrl: "/assets/image3.jpeg", description: "টুর্নামেন্ট • ২০২৪" },
+    { id: "4", title: "ঈদ সেলিব্রেশন", imageUrl: "/assets/image4.jpeg", description: "ইভেন্ট • ২০২৪" },
+    { id: "5", title: "পিকনিক ২০২৪", imageUrl: "/assets/image5.jpeg", description: "আনন্দ • প্রকৃতি" },
+    { id: "6", title: "ট্রেনিং সেশন", imageUrl: "/assets/image6.jpeg", description: "প্রস্তুতি • ২০২৫" },
+  ];
 }
 
 async function getMembers(): Promise<MemberProfile[]> {

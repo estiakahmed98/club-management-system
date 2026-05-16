@@ -5,9 +5,9 @@ import Image from "next/image";
 import type { HeroSlide } from "@/types/club";
 
 const DEFAULT_SLIDES: HeroSlide[] = [
-  { id: "1", imageUrl: "", title: "মাঠের লড়াই" },
-  { id: "2", imageUrl: "", title: "একতার শক্তি" },
-  { id: "3", imageUrl: "", title: "ভবিষ্যতের স্বপ্ন" },
+  { id: "1", imageUrl: "/assets/image.jpeg", title: "মাঠের লড়াই" },
+  { id: "2", imageUrl: "/assets/image1.jpeg", title: "একতার শক্তি" },
+  { id: "3", imageUrl: "/assets/image3.jpeg", title: "ভবিষ্যতের স্বপ্ন" },
 ];
 
 const SLIDE_BG_FALLBACKS = [
