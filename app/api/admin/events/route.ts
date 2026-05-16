@@ -1,13 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
-import { executeQuery } from "@/lib/db";
-import { v4 as uuidv4 } from "uuid";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/lib/prisma/client";
 
 export async function GET(req: NextRequest) {
   try {
-    const result = await executeQuery(
-      'SELECT * FROM "Event" ORDER BY "eventDate" DESC'
-    );
-    return NextResponse.json(result);
+    const searchParams = req.nextUrl.searchParams;
+    const page = Number(searchParams.get("page") || 1);
+    const limit = Number(searchParams.get("limit") || 10);
+    const search = searchParams.get("search") || "";
+    const type = searchParams.get("type") || "";
+    
+    const skip = (page - 1) * limit;
+    
+    const where: Prisma.EventWhereInput = {
+      ...(search && {
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { location: { contains: search, mode: "insensitive" } },
+        ],
+      }),
+      ...(type && { type }),
+    };
+    
+    const [total, events] = await prisma.$transaction([
+      prisma.event.count({ where }),
+      prisma.event.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { eventDate: "desc" },
+      }),
+    ]);
+    
+    return NextResponse.json({
+      events,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("[GET EVENTS ERROR]", error);
     return NextResponse.json(
@@ -29,44 +62,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const id = uuidv4();
-    await executeQuery(
-      'INSERT INTO "Event" (id, name, description, "eventDate", location, type, budget) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-      [id, name, description || null, eventDate, location || null, type, budget || 0]
-    );
+    const event = await prisma.event.create({
+      data: {
+        name,
+        description: description || null,
+        eventDate: new Date(eventDate),
+        location: location || null,
+        type,
+        budget: budget || 0,
+      },
+    });
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true, event }, { status: 201 });
   } catch (error) {
     console.error("[CREATE EVENT ERROR]", error);
     return NextResponse.json(
       { error: "Failed to create event" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PUT(req: NextRequest) {
-  try {
-    const { id, name, description, eventDate, location, type, budget } =
-      await req.json();
-
-    if (!id || !name) {
-      return NextResponse.json(
-        { error: "ID and name are required" },
-        { status: 400 }
-      );
-    }
-
-    await executeQuery(
-      'UPDATE "Event" SET name = $1, description = $2, "eventDate" = $3, location = $4, type = $5, budget = $6, "updatedAt" = NOW() WHERE id = $7',
-      [name, description || null, eventDate, location || null, type, budget || 0, id]
-    );
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("[UPDATE EVENT ERROR]", error);
-    return NextResponse.json(
-      { error: "Failed to update event" },
       { status: 500 }
     );
   }

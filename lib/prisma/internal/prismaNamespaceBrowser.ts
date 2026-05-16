@@ -103,6 +103,7 @@ export const MemberProfileScalarFieldEnum = {
   address: 'address',
   joiningDate: 'joiningDate',
   photoUrl: 'photoUrl',
+  teamCategory: 'teamCategory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -23,7 +23,7 @@ import {
   Edit2,
   Trash2,
   Search,
-  Filter,
+  X,
   ChevronLeft,
   ChevronRight,
   Users,
@@ -32,7 +32,6 @@ import {
   Droplet,
   Shirt,
   Calendar,
-  X,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
@@ -44,6 +43,7 @@ interface Member {
   bloodGroup?: string;
   jerseySize?: string;
   joiningDate: string;
+  teamCategory: string;
 }
 
 interface PaginationData {
@@ -60,6 +60,7 @@ export default function MembersPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [bloodGroupFilter, setBloodGroupFilter] = useState<string>("all");
   const [jerseySizeFilter, setJerseySizeFilter] = useState<string>("all");
+  const [teamCategoryFilter, setTeamCategoryFilter] = useState<string>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationData>({
@@ -74,11 +75,13 @@ export default function MembersPage() {
     phone: "",
     bloodGroup: "",
     jerseySize: "",
+    teamCategory: "JUNIOR",
   });
 
   // Blood groups and jersey sizes for filters
   const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
   const jerseySizes = ["S", "M", "L", "XL", "XXL", "XXXL"];
+  const teamCategories = ["JUNIOR", "SENIOR", "GUEST"];
 
   // Debounce search input
   useEffect(() => {
@@ -89,6 +92,11 @@ export default function MembersPage() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // Reset page when filters change
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  }, [bloodGroupFilter, jerseySizeFilter, teamCategoryFilter, debouncedSearch]);
+
   // Fetch members with filters and pagination
   const fetchMembers = useCallback(async () => {
     try {
@@ -96,10 +104,12 @@ export default function MembersPage() {
       const params = new URLSearchParams({
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
-        search: debouncedSearch,
-        bloodGroup: bloodGroupFilter !== "all" ? bloodGroupFilter : "",
-        jerseySize: jerseySizeFilter !== "all" ? jerseySizeFilter : "",
       });
+      
+      if (debouncedSearch) params.append("search", debouncedSearch);
+      if (bloodGroupFilter !== "all") params.append("bloodGroup", bloodGroupFilter);
+      if (jerseySizeFilter !== "all") params.append("jerseySize", jerseySizeFilter);
+      if (teamCategoryFilter !== "all") params.append("teamCategory", teamCategoryFilter);
 
       const response = await fetch(`/api/admin/members?${params}`);
       if (!response.ok) throw new Error("Failed to fetch members");
@@ -123,6 +133,7 @@ export default function MembersPage() {
     debouncedSearch,
     bloodGroupFilter,
     jerseySizeFilter,
+    teamCategoryFilter,
   ]);
 
   useEffect(() => {
@@ -161,6 +172,7 @@ export default function MembersPage() {
       phone: member.phone || "",
       bloodGroup: member.bloodGroup || "",
       jerseySize: member.jerseySize || "",
+      teamCategory: member.teamCategory,
     });
     setDialogOpen(true);
   };
@@ -207,6 +219,7 @@ export default function MembersPage() {
         phone: "",
         bloodGroup: "",
         jerseySize: "",
+        teamCategory: "JUNIOR",
       });
       fetchMembers();
     } catch (error) {
@@ -224,7 +237,7 @@ export default function MembersPage() {
     setSearchTerm("");
     setBloodGroupFilter("all");
     setJerseySizeFilter("all");
-    setPagination((prev) => ({ ...prev, page: 1 }));
+    setTeamCategoryFilter("all");
   };
 
   const handlePageChange = (newPage: number) => {
@@ -233,16 +246,25 @@ export default function MembersPage() {
 
   const getBloodGroupColor = (bloodGroup: string) => {
     const colors: Record<string, string> = {
-      "A+": "bg-green-100 text-green-800",
-      "A-": "bg-green-100 text-green-800",
-      "B+": "bg-blue-100 text-blue-800",
-      "B-": "bg-blue-100 text-blue-800",
-      "AB+": "bg-purple-100 text-purple-800",
-      "AB-": "bg-purple-100 text-purple-800",
-      "O+": "bg-red-100 text-red-800",
-      "O-": "bg-red-100 text-red-800",
+      "A+": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+      "A-": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+      "B+": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+      "B-": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+      "AB+": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      "AB-": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      "O+": "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+      "O-": "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
     };
-    return colors[bloodGroup] || "bg-gray-100 text-gray-800";
+    return colors[bloodGroup] || "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
+  };
+
+  const getTeamCategoryColor = (category: string) => {
+    const colors: Record<string, string> = {
+      JUNIOR: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+      SENIOR: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      GUEST: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
+    };
+    return colors[category] || "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -266,10 +288,11 @@ export default function MembersPage() {
               phone: "",
               bloodGroup: "",
               jerseySize: "",
+              teamCategory: "JUNIOR",
             });
             setDialogOpen(true);
           }}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          className="bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add New Member
@@ -277,8 +300,8 @@ export default function MembersPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -293,12 +316,12 @@ export default function MembersPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20">
+        <Card className="bg-linear-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-green-600 dark:text-green-400">
-                  Active Members
+                  Showing Now
                 </p>
                 <p className="text-2xl font-bold text-green-900 dark:text-green-100">
                   {members.length}
@@ -308,7 +331,7 @@ export default function MembersPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20">
+        <Card className="bg-linear-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -326,7 +349,7 @@ export default function MembersPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20">
+        <Card className="bg-linear-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -391,9 +414,26 @@ export default function MembersPage() {
                 ))}
               </SelectContent>
             </Select>
+            <Select
+              value={teamCategoryFilter}
+              onValueChange={setTeamCategoryFilter}
+            >
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="Team Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {teamCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category.charAt(0) + category.slice(1).toLowerCase()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {(searchTerm ||
               bloodGroupFilter !== "all" ||
-              jerseySizeFilter !== "all") && (
+              jerseySizeFilter !== "all" ||
+              teamCategoryFilter !== "all") && (
               <Button
                 variant="outline"
                 onClick={clearFilters}
@@ -426,7 +466,8 @@ export default function MembersPage() {
               <p className="text-gray-500">No members found</p>
               {(searchTerm ||
                 bloodGroupFilter !== "all" ||
-                jerseySizeFilter !== "all") && (
+                jerseySizeFilter !== "all" ||
+                teamCategoryFilter !== "all") && (
                 <Button variant="link" onClick={clearFilters} className="mt-2">
                   Clear filters
                 </Button>
@@ -451,6 +492,9 @@ export default function MembersPage() {
                         Jersey
                       </th>
                       <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Team Category
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
                         Joined
                       </th>
                       <th className="px-6 py-3 text-center text-sm font-semibold">
@@ -462,7 +506,7 @@ export default function MembersPage() {
                     {members.map((member) => (
                       <tr
                         key={member.id}
-                        className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <td className="px-6 py-4">
                           <div className="font-medium text-gray-900 dark:text-white">
@@ -471,14 +515,14 @@ export default function MembersPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="space-y-1">
-                            <div className="flex items-center text-sm text-gray-500">
-                              <Mail className="w-3 h-3 mr-1" />
-                              {member.email}
+                            <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                              <Mail className="w-3 h-3 mr-1 shrink-0" />
+                              <span className="truncate">{member.email}</span>
                             </div>
                             {member.phone && (
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Phone className="w-3 h-3 mr-1" />
-                                {member.phone}
+                              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                <Phone className="w-3 h-3 mr-1 shrink-0" />
+                                <span>{member.phone}</span>
                               </div>
                             )}
                           </div>
@@ -502,18 +546,23 @@ export default function MembersPage() {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Calendar className="w-3 h-3 mr-1" />
+                          <Badge className={getTeamCategoryColor(member.teamCategory)}>
+                            {member.teamCategory.charAt(0) + member.teamCategory.slice(1).toLowerCase()}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                            <Calendar className="w-3 h-3 mr-1 shrink-0" />
                             {new Date(member.joiningDate).toLocaleDateString()}
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6 py-4">
                           <div className="flex items-center justify-center space-x-2">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleEdit(member)}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                             >
                               <Edit2 className="w-4 h-4" />
                             </Button>
@@ -521,7 +570,7 @@ export default function MembersPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDelete(member.id)}
-                              className="text-red-600 hover:text-red-800"
+                              className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -535,7 +584,7 @@ export default function MembersPage() {
 
               {/* Pagination */}
               {pagination.totalPages > 1 && (
-                <div className="flex items-center justify-between mt-6 pt-6 border-t">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t">
                   <p className="text-sm text-gray-500">
                     Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
                     {Math.min(
@@ -650,15 +699,15 @@ export default function MembersPage() {
                 placeholder="+880 1234 567890"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   Blood Group
                 </label>
                 <Select
-                  value={formData.bloodGroup}
+                  value={formData.bloodGroup || "none"}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, bloodGroup: value })
+                    setFormData({ ...formData, bloodGroup: value === "none" ? "" : value })
                   }
                 >
                   <SelectTrigger>
@@ -679,9 +728,9 @@ export default function MembersPage() {
                   Jersey Size
                 </label>
                 <Select
-                  value={formData.jerseySize}
+                  value={formData.jerseySize || "none"}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, jerseySize: value })
+                    setFormData({ ...formData, jerseySize: value === "none" ? "" : value })
                   }
                 >
                   <SelectTrigger>
@@ -692,6 +741,28 @@ export default function MembersPage() {
                     {jerseySizes.map((size) => (
                       <SelectItem key={size} value={size}>
                         {size}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Team Category
+                </label>
+                <Select
+                  value={formData.teamCategory}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, teamCategory: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {teamCategories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category.charAt(0) + category.slice(1).toLowerCase()}
                       </SelectItem>
                     ))}
                   </SelectContent>

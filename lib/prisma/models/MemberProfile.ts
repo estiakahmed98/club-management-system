@@ -36,6 +36,7 @@ export type MemberProfileMinAggregateOutputType = {
   address: string | null
   joiningDate: Date | null
   photoUrl: string | null
+  teamCategory: $Enums.TeamCategory | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +53,7 @@ export type MemberProfileMaxAggregateOutputType = {
   address: string | null
   joiningDate: Date | null
   photoUrl: string | null
+  teamCategory: $Enums.TeamCategory | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +70,7 @@ export type MemberProfileCountAggregateOutputType = {
   address: number
   joiningDate: number
   photoUrl: number
+  teamCategory: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -86,6 +89,7 @@ export type MemberProfileMinAggregateInputType = {
   address?: true
   joiningDate?: true
   photoUrl?: true
+  teamCategory?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -102,6 +106,7 @@ export type MemberProfileMaxAggregateInputType = {
   address?: true
   joiningDate?: true
   photoUrl?: true
+  teamCategory?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +123,7 @@ export type MemberProfileCountAggregateInputType = {
   address?: true
   joiningDate?: true
   photoUrl?: true
+  teamCategory?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -207,6 +213,7 @@ export type MemberProfileGroupByOutputType = {
   address: string | null
   joiningDate: Date
   photoUrl: string | null
+  teamCategory: $Enums.TeamCategory
   createdAt: Date
   updatedAt: Date
   _count: MemberProfileCountAggregateOutputType | null
@@ -244,6 +251,7 @@ export type MemberProfileWhereInput = {
   address?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   joiningDate?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   photoUrl?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFilter<"MemberProfile"> | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -262,6 +270,7 @@ export type MemberProfileOrderByWithRelationInput = {
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -283,6 +292,7 @@ export type MemberProfileWhereUniqueInput = Prisma.AtLeast<{
   address?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   joiningDate?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   photoUrl?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFilter<"MemberProfile"> | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -301,6 +311,7 @@ export type MemberProfileOrderByWithAggregationInput = {
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MemberProfileCountOrderByAggregateInput
@@ -323,6 +334,7 @@ export type MemberProfileScalarWhereWithAggregatesInput = {
   address?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
   joiningDate?: Prisma.DateTimeWithAggregatesFilter<"MemberProfile"> | Date | string
   photoUrl?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
+  teamCategory?: Prisma.EnumTeamCategoryWithAggregatesFilter<"MemberProfile"> | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MemberProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MemberProfile"> | Date | string
 }
@@ -338,6 +350,7 @@ export type MemberProfileCreateInput = {
   address?: string | null
   joiningDate?: Date | string
   photoUrl?: string | null
+  teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProfileInput
@@ -356,6 +369,7 @@ export type MemberProfileUncheckedCreateInput = {
   address?: string | null
   joiningDate?: Date | string
   photoUrl?: string | null
+  teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutProfileInput
@@ -372,6 +386,7 @@ export type MemberProfileUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput
@@ -390,6 +405,7 @@ export type MemberProfileUncheckedUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutProfileNestedInput
@@ -407,6 +423,7 @@ export type MemberProfileCreateManyInput = {
   address?: string | null
   joiningDate?: Date | string
   photoUrl?: string | null
+  teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -422,6 +439,7 @@ export type MemberProfileUpdateManyMutationInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -438,6 +456,7 @@ export type MemberProfileUncheckedUpdateManyInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -459,6 +478,7 @@ export type MemberProfileCountOrderByAggregateInput = {
   address?: Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
+  teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -475,6 +495,7 @@ export type MemberProfileMaxOrderByAggregateInput = {
   address?: Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
+  teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -491,6 +512,7 @@ export type MemberProfileMinOrderByAggregateInput = {
   address?: Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
+  teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -536,6 +558,10 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type EnumTeamCategoryFieldUpdateOperationsInput = {
+  set?: $Enums.TeamCategory
+}
+
 export type MemberProfileCreateNestedOneWithoutParticipantsInput = {
   create?: Prisma.XOR<Prisma.MemberProfileCreateWithoutParticipantsInput, Prisma.MemberProfileUncheckedCreateWithoutParticipantsInput>
   connectOrCreate?: Prisma.MemberProfileCreateOrConnectWithoutParticipantsInput
@@ -561,6 +587,7 @@ export type MemberProfileCreateWithoutUserInput = {
   address?: string | null
   joiningDate?: Date | string
   photoUrl?: string | null
+  teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
   participants?: Prisma.ParticipantCreateNestedManyWithoutProfileInput
@@ -577,6 +604,7 @@ export type MemberProfileUncheckedCreateWithoutUserInput = {
   address?: string | null
   joiningDate?: Date | string
   photoUrl?: string | null
+  teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutProfileInput
@@ -609,6 +637,7 @@ export type MemberProfileUpdateWithoutUserInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantUpdateManyWithoutProfileNestedInput
@@ -625,6 +654,7 @@ export type MemberProfileUncheckedUpdateWithoutUserInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutProfileNestedInput
@@ -641,6 +671,7 @@ export type MemberProfileCreateWithoutParticipantsInput = {
   address?: string | null
   joiningDate?: Date | string
   photoUrl?: string | null
+  teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProfileInput
@@ -658,6 +689,7 @@ export type MemberProfileUncheckedCreateWithoutParticipantsInput = {
   address?: string | null
   joiningDate?: Date | string
   photoUrl?: string | null
+  teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -689,6 +721,7 @@ export type MemberProfileUpdateWithoutParticipantsInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput
@@ -706,6 +739,7 @@ export type MemberProfileUncheckedUpdateWithoutParticipantsInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -753,6 +787,7 @@ export type MemberProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   address?: boolean
   joiningDate?: boolean
   photoUrl?: boolean
+  teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -772,6 +807,7 @@ export type MemberProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   address?: boolean
   joiningDate?: boolean
   photoUrl?: boolean
+  teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -789,6 +825,7 @@ export type MemberProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   address?: boolean
   joiningDate?: boolean
   photoUrl?: boolean
+  teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -806,11 +843,12 @@ export type MemberProfileSelectScalar = {
   address?: boolean
   joiningDate?: boolean
   photoUrl?: boolean
+  teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MemberProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "phone" | "email" | "bloodGroup" | "jerseySize" | "jerseyNumber" | "address" | "joiningDate" | "photoUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["memberProfile"]>
+export type MemberProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "phone" | "email" | "bloodGroup" | "jerseySize" | "jerseyNumber" | "address" | "joiningDate" | "photoUrl" | "teamCategory" | "createdAt" | "updatedAt", ExtArgs["result"]["memberProfile"]>
 export type MemberProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   participants?: boolean | Prisma.MemberProfile$participantsArgs<ExtArgs>
@@ -841,6 +879,7 @@ export type $MemberProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     address: string | null
     joiningDate: Date
     photoUrl: string | null
+    teamCategory: $Enums.TeamCategory
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["memberProfile"]>
@@ -1279,6 +1318,7 @@ export interface MemberProfileFieldRefs {
   readonly address: Prisma.FieldRef<"MemberProfile", 'String'>
   readonly joiningDate: Prisma.FieldRef<"MemberProfile", 'DateTime'>
   readonly photoUrl: Prisma.FieldRef<"MemberProfile", 'String'>
+  readonly teamCategory: Prisma.FieldRef<"MemberProfile", 'TeamCategory'>
   readonly createdAt: Prisma.FieldRef<"MemberProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MemberProfile", 'DateTime'>
 }

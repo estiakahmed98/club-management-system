@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { Prisma } from "@/lib/prisma/client";
+import { Prisma, TeamCategory } from "@/lib/prisma/client";
 import bcrypt from "bcryptjs";
 
 interface CreateMemberRequestBody {
@@ -9,6 +9,7 @@ interface CreateMemberRequestBody {
   bloodGroup?: string | null;
   jerseySize?: string | null;
   email: string;
+  teamCategory?: TeamCategory;
 }
 
 interface MemberResponse {
@@ -18,6 +19,7 @@ interface MemberResponse {
   phone?: string | null;
   bloodGroup?: string | null;
   jerseySize?: string | null;
+  teamCategory: TeamCategory;
   joiningDate: Date;
 }
 
@@ -26,6 +28,10 @@ interface PaginationResponse {
   page: number;
   limit: number;
   totalPages: number;
+}
+
+function isValidTeamCategory(value: string | null): value is TeamCategory {
+  return value === "JUNIOR" || value === "SENIOR" || value === "GUEST";
 }
 
 export async function GET(req: NextRequest) {
@@ -37,6 +43,11 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search")?.trim() || "";
     const bloodGroup = searchParams.get("bloodGroup")?.trim();
     const jerseySize = searchParams.get("jerseySize")?.trim();
+    const teamCategoryParam = searchParams.get("teamCategory");
+
+    const teamCategory = isValidTeamCategory(teamCategoryParam)
+      ? teamCategoryParam
+      : undefined;
 
     const skip = (page - 1) * limit;
 
@@ -59,6 +70,7 @@ export async function GET(req: NextRequest) {
         : {}),
       ...(bloodGroup ? { bloodGroup } : {}),
       ...(jerseySize ? { jerseySize } : {}),
+      ...(teamCategory ? { teamCategory } : {}),
     };
 
     const [total, members] = await prisma.$transaction([
@@ -87,6 +99,7 @@ export async function GET(req: NextRequest) {
       phone: member.phone,
       bloodGroup: member.bloodGroup,
       jerseySize: member.jerseySize,
+      teamCategory: member.teamCategory,
       joiningDate: member.joiningDate,
     }));
 
@@ -120,10 +133,18 @@ export async function POST(req: NextRequest) {
     const phone = body.phone?.trim() || null;
     const bloodGroup = body.bloodGroup?.trim() || null;
     const jerseySize = body.jerseySize?.trim() || null;
+    const teamCategory = body.teamCategory || "JUNIOR";
 
     if (!name || !email) {
       return NextResponse.json(
         { error: "Name and email are required" },
+        { status: 400 },
+      );
+    }
+
+    if (!isValidTeamCategory(teamCategory)) {
+      return NextResponse.json(
+        { error: "Invalid team category" },
         { status: 400 },
       );
     }
@@ -158,6 +179,7 @@ export async function POST(req: NextRequest) {
           phone,
           bloodGroup,
           jerseySize,
+          teamCategory,
         },
       });
 

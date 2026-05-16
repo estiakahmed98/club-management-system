@@ -87,6 +87,13 @@ export type StringNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null
 }
 
+export type EnumTeamCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.TeamCategory | Prisma.EnumTeamCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTeamCategoryFilter<$PrismaModel> | $Enums.TeamCategory
+}
+
 export type SortOrderInput = {
   sort: Prisma.SortOrder
   nulls?: Prisma.NullsOrder
@@ -108,6 +115,16 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedStringNullableFilter<$PrismaModel>
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
+}
+
+export type EnumTeamCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TeamCategory | Prisma.EnumTeamCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTeamCategoryWithAggregatesFilter<$PrismaModel> | $Enums.TeamCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTeamCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTeamCategoryFilter<$PrismaModel>
 }
 
 export type FloatFilter<$PrismaModel = never> = {
@@ -272,6 +289,13 @@ export type NestedStringNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null
 }
 
+export type NestedEnumTeamCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.TeamCategory | Prisma.EnumTeamCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTeamCategoryFilter<$PrismaModel> | $Enums.TeamCategory
+}
+
 export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
@@ -298,6 +322,16 @@ export type NestedIntNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
   gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedIntNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumTeamCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TeamCategory | Prisma.EnumTeamCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TeamCategory[] | Prisma.ListEnumTeamCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTeamCategoryWithAggregatesFilter<$PrismaModel> | $Enums.TeamCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTeamCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTeamCategoryFilter<$PrismaModel>
 }
 
 export type NestedFloatFilter<$PrismaModel = never> = {

@@ -9,7 +9,10 @@
 * 🟢 You can import this file directly.
 */
 
+export const TeamCategory = {
+  JUNIOR: 'JUNIOR',
+  SENIOR: 'SENIOR',
+  GUEST: 'GUEST'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type TeamCategory = (typeof TeamCategory)[keyof typeof TeamCategory]

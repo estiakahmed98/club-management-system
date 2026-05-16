@@ -1216,6 +1216,7 @@ export const MemberProfileScalarFieldEnum = {
   address: 'address',
   joiningDate: 'joiningDate',
   photoUrl: 'photoUrl',
+  teamCategory: 'teamCategory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1405,6 +1406,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TeamCategory'
+ */
+export type EnumTeamCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'TeamCategory[]'
+ */
+export type ListEnumTeamCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamCategory[]'>
     
 
 

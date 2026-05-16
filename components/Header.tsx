@@ -71,7 +71,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps) {
 
   return (
     <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-30 transition-all duration-300">
-      <div className="px-4 py-3 flex items-center justify-between">
+      <div className="px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
         {/* Left Section - Menu Button & Brand */}
         <div className="flex items-center space-x-4">
           <button
@@ -89,10 +89,20 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps) {
               View all your club activities here today
             </p>
           </div>
+
+          {/* Mobile compact title */}
+          <div className="lg:hidden">
+            <p className="text-sm font-semibold text-gray-800 dark:text-white leading-tight">
+              {user?.name || "Admin"}
+            </p>
+            <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">
+              Admin Panel
+            </p>
+          </div>
         </div>
 
         {/* Right Section - Actions */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           {/* Dark Mode Toggle */}
           <button
             onClick={toggleDarkMode}
@@ -124,7 +134,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps) {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowNotifDropdown(false)}
                 />
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl z-50 border border-gray-200 dark:border-gray-700">
+                <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] max-w-sm bg-white dark:bg-gray-800 rounded-lg shadow-xl z-50 border border-gray-200 dark:border-gray-700">
                   <div className="p-3 border-b border-gray-200 dark:border-gray-700">
                     <h3 className="font-semibold text-gray-800 dark:text-white">
                       Notifications

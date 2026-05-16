@@ -24,10 +24,16 @@ model User {
   expenses      Expense[]
 }
 
+enum TeamCategory {
+  JUNIOR
+  SENIOR
+  GUEST
+}
+
 // Member Profile model - additional info for members
 model MemberProfile {
-  id              String    @id @default(cuid())
-  userId          String    @unique
+  id              String        @id @default(cuid())
+  userId          String        @unique
   name            String
   phone           String?
   email           String?
@@ -35,13 +41,16 @@ model MemberProfile {
   jerseySize      String?
   jerseyNumber    String?
   address         String?
-  joiningDate     DateTime  @default(now())
+  joiningDate     DateTime      @default(now())
   photoUrl        String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+
+  teamCategory    TeamCategory  @default(JUNIOR)
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   // Relations
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   participants    Participant[]
 }
 

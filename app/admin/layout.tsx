@@ -15,30 +15,52 @@ export default function AdminLayout({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (!userStr) {
-      router.push("/auth/login");
-      return;
-    }
+    // Check if user is logged in and is admin
+    const checkAuth = () => {
+      try {
+        const userStr = localStorage.getItem("user");
+        
+        if (!userStr) {
+          router.push("/auth/login");
+          return;
+        }
 
-    try {
-      const userData = JSON.parse(userStr);
-      if (userData.role !== "admin") {
-        router.push("/member/dashboard");
-        return;
+        const userData = JSON.parse(userStr);
+        
+        if (userData.role !== "admin") {
+          router.push("/member/dashboard");
+          return;
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        localStorage.removeItem("user");
+        router.push("/auth/login");
       }
-    } catch {
-      router.push("/auth/login");
-    }
-    setLoading(false);
+    };
+
+    checkAuth();
   }, [router]);
+
+  // Save sidebar state to localStorage
+  useEffect(() => {
+    const savedState = localStorage.getItem("sidebarOpen");
+    if (savedState !== null) {
+      setSidebarOpen(savedState === "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("sidebarOpen", String(sidebarOpen));
+  }, [sidebarOpen]);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">লোড হচ্ছে...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </div>
     );
@@ -51,7 +73,9 @@ export default function AdminLayout({
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          {children}
+        </main>
       </div>
     </div>
   );
