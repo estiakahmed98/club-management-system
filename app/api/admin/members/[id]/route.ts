@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { TeamCategory } from "@/lib/prisma/client";
+import { prisma } from "@/lib/db";
+import { Prisma, TeamCategory } from "@/lib/prisma/client";
+import bcrypt from "bcryptjs";
 
 interface UpdateMemberRequestBody {
-  name?: string;
+  name: string;
+  email: string;
   phone?: string | null;
   bloodGroup?: string | null;
   jerseySize?: string | null;
   teamCategory?: TeamCategory;
+  password?: string;
 }
 
-function isValidTeamCategory(value: string | undefined): value is TeamCategory {
+function isValidTeamCategory(value: unknown): value is TeamCategory {
   return value === "JUNIOR" || value === "SENIOR" || value === "GUEST";
 }
 
@@ -19,17 +22,22 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = await params;
+    const { id } = await params; // MemberProfile.id
     const body = (await req.json()) as UpdateMemberRequestBody;
 
     const name = body.name?.trim();
+    const email = body.email?.trim().toLowerCase();
     const phone = body.phone?.trim() || null;
     const bloodGroup = body.bloodGroup?.trim() || null;
     const jerseySize = body.jerseySize?.trim() || null;
     const teamCategory = body.teamCategory;
+    const password = body.password;
 
-    if (!name) {
-      return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    if (!name || !email) {
+      return NextResponse.json(
+        { error: "Name and email are required" },
+        { status: 400 },
+      );
     }
 
     if (teamCategory && !isValidTeamCategory(teamCategory)) {
@@ -39,20 +47,53 @@ export async function PUT(
       );
     }
 
-    const updatedProfile = await prisma.memberProfile.update({
+    const existingProfile = await prisma.memberProfile.findUnique({
       where: { id },
-      data: {
-        name,
-        phone,
-        bloodGroup,
-        jerseySize,
-        ...(teamCategory ? { teamCategory } : {}),
-      },
+      select: { id: true, userId: true },
     });
 
-    return NextResponse.json({ success: true, data: updatedProfile });
+    if (!existingProfile) {
+      return NextResponse.json({ error: "Member not found" }, { status: 404 });
+    }
+
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.update({
+        where: { id: existingProfile.userId },
+        data: {
+          email,
+          ...(hashedPassword ? { password: hashedPassword } : {}),
+        },
+      });
+
+      const profile = await tx.memberProfile.update({
+        where: { id },
+        data: {
+          name,
+          email,
+          phone,
+          bloodGroup,
+          jerseySize,
+          ...(teamCategory ? { teamCategory } : {}),
+        },
+      });
+
+      return { user, profile };
+    });
+
+    return NextResponse.json({ success: true, data: result });
   } catch (error) {
     console.error("[UPDATE MEMBER ERROR]", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return NextResponse.json(
+          { error: "Email already exists" },
+          { status: 400 },
+        );
+      }
+    }
 
     return NextResponse.json(
       { error: "Failed to update member" },
@@ -66,33 +107,29 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = await params;
-    const profile = await prisma.memberProfile.findUnique({
+    const { id } = await params; // MemberProfile.id
+
+    const existingProfile = await prisma.memberProfile.findUnique({
       where: { id },
-      include: { user: true },
+      select: { id: true, userId: true },
     });
 
-    if (!profile) {
+    if (!existingProfile) {
       return NextResponse.json({ error: "Member not found" }, { status: 404 });
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.memberProfile.delete({
-        where: { id },
-      });
-
-      await tx.user.delete({
-        where: { id: profile.userId },
-      });
+    // Deleting the user cascades to MemberProfile via relation onDelete: Cascade.
+    await prisma.user.delete({
+      where: { id: existingProfile.userId },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[DELETE MEMBER ERROR]", error);
-
     return NextResponse.json(
       { error: "Failed to delete member" },
       { status: 500 },
     );
   }
 }
+

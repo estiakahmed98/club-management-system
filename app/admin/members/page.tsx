@@ -32,11 +32,14 @@ import {
   Droplet,
   Shirt,
   Calendar,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface Member {
   id: string;
+  userId: string;
   name: string;
   email: string;
   phone?: string;
@@ -63,6 +66,7 @@ export default function MembersPage() {
   const [teamCategoryFilter, setTeamCategoryFilter] = useState<string>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [pagination, setPagination] = useState<PaginationData>({
     total: 0,
     page: 1,
@@ -72,6 +76,7 @@ export default function MembersPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
     phone: "",
     bloodGroup: "",
     jerseySize: "",
@@ -166,9 +171,11 @@ export default function MembersPage() {
 
   const handleEdit = (member: Member) => {
     setEditingId(member.id);
+    setShowPassword(false);
     setFormData({
       name: member.name,
       email: member.email,
+      password: "",
       phone: member.phone || "",
       bloodGroup: member.bloodGroup || "",
       jerseySize: member.jerseySize || "",
@@ -178,10 +185,13 @@ export default function MembersPage() {
   };
 
   const handleSave = async () => {
-    if (!formData.name || !formData.email) {
+    const needsPassword = !editingId;
+    if (!formData.name || !formData.email || (needsPassword && !formData.password)) {
       toast({
         title: "Validation Error",
-        description: "Name and email are required",
+        description: needsPassword
+          ? "Name, email, and password are required"
+          : "Name and email are required",
         variant: "destructive",
       });
       return;
@@ -216,6 +226,7 @@ export default function MembersPage() {
       setFormData({
         name: "",
         email: "",
+        password: "",
         phone: "",
         bloodGroup: "",
         jerseySize: "",
@@ -282,9 +293,11 @@ export default function MembersPage() {
         <Button
           onClick={() => {
             setEditingId(null);
+            setShowPassword(false);
             setFormData({
               name: "",
               email: "",
+              password: "",
               phone: "",
               bloodGroup: "",
               jerseySize: "",
@@ -686,6 +699,35 @@ export default function MembersPage() {
                 }
                 placeholder="member@example.com"
               />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                {editingId ? "Reset Password (optional)" : "Password"}{" "}
+                {!editingId && <span className="text-red-500">*</span>}
+              </label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  placeholder={editingId ? "Leave blank to keep current password" : "Set a password"}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">

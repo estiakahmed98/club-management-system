@@ -9,6 +9,7 @@ interface CreateMemberRequestBody {
   bloodGroup?: string | null;
   jerseySize?: string | null;
   email: string;
+  password: string;
   teamCategory?: TeamCategory;
 }
 
@@ -132,14 +133,15 @@ export async function POST(req: NextRequest) {
 
     const name = body.name?.trim();
     const email = body.email?.trim().toLowerCase();
+    const password = body.password;
     const phone = body.phone?.trim() || null;
     const bloodGroup = body.bloodGroup?.trim() || null;
     const jerseySize = body.jerseySize?.trim() || null;
     const teamCategory = body.teamCategory || "JUNIOR";
 
-    if (!name || !email) {
+    if (!name || !email || !password) {
       return NextResponse.json(
-        { error: "Name and email are required" },
+        { error: "Name, email, and password are required" },
         { status: 400 },
       );
     }
@@ -162,7 +164,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const hashedPassword = await bcrypt.hash("password123", 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
@@ -198,6 +200,15 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("[CREATE MEMBER ERROR]", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return NextResponse.json(
+          { error: "Email already exists" },
+          { status: 400 },
+        );
+      }
+    }
 
     return NextResponse.json(
       { error: "Failed to create member" },
