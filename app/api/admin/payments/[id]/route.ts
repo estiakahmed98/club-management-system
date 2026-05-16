@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { executeQuery } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await executeQuery('DELETE FROM "Payment" WHERE id = $1', [params.id]);
+    const { id } = await params;
+    
+    await prisma.payment.delete({
+      where: { id },
+    });
+    
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[DELETE PAYMENT ERROR]", error);
@@ -19,24 +24,30 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { amount, purpose, description, status } = await req.json();
 
-    if (!amount) {
+    if (!amount || amount <= 0) {
       return NextResponse.json(
-        { error: "Amount is required" },
+        { error: "Valid amount is required" },
         { status: 400 }
       );
     }
 
-    await executeQuery(
-      'UPDATE "Payment" SET amount = $1, purpose = $2, description = $3, status = $4, "updatedAt" = NOW() WHERE id = $5',
-      [amount, purpose, description || null, status, params.id]
-    );
+    const payment = await prisma.payment.update({
+      where: { id },
+      data: {
+        amount,
+        purpose: purpose || "other",
+        description: description || null,
+        status: status || "paid",
+      },
+    });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, payment });
   } catch (error) {
     console.error("[UPDATE PAYMENT ERROR]", error);
     return NextResponse.json(

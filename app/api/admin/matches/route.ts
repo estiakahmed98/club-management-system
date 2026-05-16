@@ -1,13 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import { executeQuery } from "@/lib/db";
-import { v4 as uuidv4 } from "uuid";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/lib/prisma/client";
 
 export async function GET(req: NextRequest) {
   try {
-    const result = await executeQuery(
-      'SELECT * FROM "Match" ORDER BY "matchDate" DESC'
-    );
-    return NextResponse.json(result);
+    const searchParams = req.nextUrl.searchParams;
+    const page = Number(searchParams.get("page") || 1);
+    const limit = Number(searchParams.get("limit") || 10);
+    const search = searchParams.get("search") || "";
+    const matchType = searchParams.get("matchType") || "";
+    const result = searchParams.get("result") || "";
+    
+    const skip = (page - 1) * limit;
+    
+    const where: Prisma.MatchWhereInput = {
+      ...(search && {
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { opponent: { contains: search, mode: "insensitive" } },
+        ],
+      }),
+      ...(matchType && { matchType }),
+      ...(result && { result }),
+    };
+    
+    const [total, matches] = await prisma.$transaction([
+      prisma.match.count({ where }),
+      prisma.match.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { matchDate: "desc" },
+      }),
+    ]);
+    
+    return NextResponse.json({
+      matches,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("[GET MATCHES ERROR]", error);
     return NextResponse.json(
@@ -29,13 +64,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const id = uuidv4();
-    await executeQuery(
-      'INSERT INTO "Match" (id, name, opponent, "matchDate", location, "matchType", result, score) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-      [id, name, opponent, matchDate, location || null, matchType, result || null, score || null]
-    );
+    const match = await prisma.match.create({
+      data: {
+        name,
+        opponent,
+        matchDate: new Date(matchDate),
+        location: location || null,
+        matchType,
+        result: result || null,
+        score: score || null,
+      },
+    });
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true, match }, { status: 201 });
   } catch (error) {
     console.error("[CREATE MATCH ERROR]", error);
     return NextResponse.json(

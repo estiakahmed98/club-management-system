@@ -14,6 +14,7 @@ interface CreateMemberRequestBody {
 
 interface MemberResponse {
   id: string;
+  userId: string;
   name: string;
   email: string;
   phone?: string | null;
@@ -94,6 +95,7 @@ export async function GET(req: NextRequest) {
 
     const formattedMembers: MemberResponse[] = members.map((member) => ({
       id: member.id,
+      userId: member.userId,
       name: member.name,
       email: member.email || member.user.email,
       phone: member.phone,
