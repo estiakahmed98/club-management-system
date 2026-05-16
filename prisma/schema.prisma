@@ -1,0 +1,216 @@
+// Club Management System Database Schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model - for authentication (admin and members)
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  role          String    @default("member") // "admin" or "member"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  profile       MemberProfile?
+  payments      Payment[]
+  expenses      Expense[]
+}
+
+// Member Profile model - additional info for members
+model MemberProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  name            String
+  phone           String?
+  email           String?
+  bloodGroup      String?
+  jerseySize      String?
+  jerseyNumber    String?
+  address         String?
+  joiningDate     DateTime  @default(now())
+  photoUrl        String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participants    Participant[]
+}
+
+// Event model - for generic events (picnic, Eid reunion, etc.)
+model Event {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  eventDate       DateTime
+  location        String?
+  type            String
+  budget          Float     @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  payments        Payment[]
+  expenses        Expense[]
+  galleryItems    GalleryItem[]
+  participants    Participant[]
+}
+
+// Match model - for sports matches
+model Match {
+  id              String    @id @default(cuid())
+  name            String
+  opponent        String
+  matchDate       DateTime
+  location        String?
+  matchType       String    // "friendly", "league", "tournament", etc.
+  result          String?   // "win", "loss", "draw", null if not played yet
+  score           String?   // e.g., "3-2"
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  payments        Payment[]
+  expenses        Expense[]
+  galleryItems    GalleryItem[]
+  participants    Participant[]
+}
+
+// Tournament model - for tournament management
+model Tournament {
+  id              String    @id @default(cuid())
+  name            String
+  startDate       DateTime
+  endDate         DateTime
+  location        String?
+  entryFee        Float     @default(0)
+  totalPrize      Float     @default(0)
+  description     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  positions       TournamentPosition[]
+  payments        Payment[]
+  expenses        Expense[]
+  galleryItems    GalleryItem[]
+  participants    Participant[]
+}
+
+// Tournament Position model - for tournament results
+model TournamentPosition {
+  id              String    @id @default(cuid())
+  tournamentId    String
+  position        Int       // 1st, 2nd, 3rd, etc.
+  teamName        String
+  prize           Float     @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  tournament      Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+}
+
+// Payment model - for member collections
+model Payment {
+  id              String    @id @default(cuid())
+  userId          String
+  amount          Float
+  purpose         String    // "iftary", "match", "event", "tournament", "monthly", "other"
+  description     String?
+  paymentDate     DateTime  @default(now())
+  month           String?   // "January", "February", etc. for monthly payments
+  year            Int?      // For monthly payments
+  status          String    @default("paid") // "paid", "pending", "cancelled"
+  
+  // Relations to events/matches/tournaments (optional)
+  eventId         String?
+  matchId         String?
+  tournamentId    String?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event           Event?    @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  match           Match?    @relation(fields: [matchId], references: [id], onDelete: SetNull)
+  tournament      Tournament? @relation(fields: [tournamentId], references: [id], onDelete: SetNull)
+}
+
+// Expense model - for expense tracking
+model Expense {
+  id              String    @id @default(cuid())
+  userId          String
+  amount          Float
+  category        String    // "food", "jersey", "ground-rent", "transport", "equipment", "other"
+  description     String
+  expenseDate     DateTime  @default(now())
+  
+  // Relations to events/matches/tournaments (optional)
+  eventId         String?
+  matchId         String?
+  tournamentId    String?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event           Event?    @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  match           Match?    @relation(fields: [matchId], references: [id], onDelete: SetNull)
+  tournament      Tournament? @relation(fields: [tournamentId], references: [id], onDelete: SetNull)
+}
+
+// Gallery model - for event/match photos
+model GalleryItem {
+  id              String    @id @default(cuid())
+  title           String
+  imageUrl        String
+  description     String?
+  
+  // Relations to events/matches/tournaments
+  eventId         String?
+  matchId         String?
+  tournamentId    String?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  event           Event?    @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  match           Match?    @relation(fields: [matchId], references: [id], onDelete: SetNull)
+  tournament      Tournament? @relation(fields: [tournamentId], references: [id], onDelete: SetNull)
+}
+
+// Participant model - for many-to-many relationships between members and events/matches/tournaments
+model Participant {
+  id              String    @id @default(cuid())
+  profileId       String
+  
+  // Relations to events/matches/tournaments
+  eventId         String?
+  matchId         String?
+  tournamentId    String?
+
+  status          String    @default("pending") // "pending", "joined", "attended", "not-attended"
+  joinedAt        DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  event           Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  match           Match?    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  tournament      Tournament? @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, eventId, matchId, tournamentId])
+}

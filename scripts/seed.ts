@@ -1,0 +1,129 @@
+import { Pool } from "pg";
+import bcryptjs from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
+
+const databaseUrl = process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error("POSTGRES_PRISMA_URL or DATABASE_URL is not set");
+}
+
+const pool = new Pool({
+  connectionString: databaseUrl,
+});
+
+async function seed() {
+  try {
+    console.log("🌱 Seeding database...");
+
+    // Create admin user
+    const adminId = uuidv4();
+    const adminPassword = await bcryptjs.hash("admin123", 10);
+    
+    await pool.query(
+      'INSERT INTO "User" (id, email, password, role) VALUES ($1, $2, $3, $4)',
+      [adminId, "admin@club.com", adminPassword, "admin"]
+    );
+    
+    const adminProfileId = uuidv4();
+    await pool.query(
+      'INSERT INTO "MemberProfile" (id, "userId", name) VALUES ($1, $2, $3)',
+      [adminProfileId, adminId, "অ্যাডমিন ব্যবহারকারী"]
+    );
+
+    console.log("✅ Admin user created (admin@club.com / admin123)");
+
+    // Create member user
+    const memberId = uuidv4();
+    const memberPassword = await bcryptjs.hash("member123", 10);
+    
+    await pool.query(
+      'INSERT INTO "User" (id, email, password, role) VALUES ($1, $2, $3, $4)',
+      [memberId, "member@club.com", memberPassword, "member"]
+    );
+    
+    const memberProfileId = uuidv4();
+    await pool.query(
+      'INSERT INTO "MemberProfile" (id, "userId", name, phone, "bloodGroup", "jerseySize") VALUES ($1, $2, $3, $4, $5, $6)',
+      [memberProfileId, memberId, "সদস্য ব্যবহারকারী", "01700000000", "O+", "M"]
+    );
+
+    console.log("✅ Member user created (member@club.com / member123)");
+
+    // Create sample event
+    const eventId = uuidv4();
+    await pool.query(
+      'INSERT INTO "Event" (id, name, description, "eventDate", location, type, budget) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [
+        eventId,
+        "ঈদ পুনর্মিলনী",
+        "সকল সদস্যদের জন্য ঈদ উদযাপন",
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        "ক্লাব গ্রাউন্ড",
+        "eid-reunion",
+        5000,
+      ]
+    );
+
+    console.log("✅ Sample event created");
+
+    // Create sample match
+    const matchId = uuidv4();
+    await pool.query(
+      'INSERT INTO "Match" (id, name, opponent, "matchDate", location, "matchType") VALUES ($1, $2, $3, $4, $5, $6)',
+      [
+        matchId,
+        "বন্ধুত্বপূর্ণ খেলা",
+        "প্রতিপক্ষ দল",
+        new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        "স্টেডিয়াম",
+        "friendly",
+      ]
+    );
+
+    console.log("✅ Sample match created");
+
+    // Create sample tournament
+    const tournamentId = uuidv4();
+    await pool.query(
+      'INSERT INTO "Tournament" (id, name, "startDate", "endDate", location, "entryFee", "totalPrize", description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+      [
+        tournamentId,
+        "গ্রীষ্মকালীন টুর্নামেন্ট",
+        new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+        new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+        "প্রধান মাঠ",
+        500,
+        10000,
+        "বছরের সবচেয়ে বড় টুর্নামেন্ট",
+      ]
+    );
+
+    console.log("✅ Sample tournament created");
+
+    // Create sample payments
+    await pool.query(
+      'INSERT INTO "Payment" (id, "userId", amount, purpose, description, status) VALUES ($1, $2, $3, $4, $5, $6)',
+      [uuidv4(), memberId, 1000, "monthly", "জুন মাসের অবদান", "paid"]
+    );
+
+    console.log("✅ Sample payment created");
+
+    // Create sample expense
+    await pool.query(
+      'INSERT INTO "Expense" (id, "userId", amount, category, description, "eventId") VALUES ($1, $2, $3, $4, $5, $6)',
+      [uuidv4(), adminId, 2000, "food", "ঈদ উদযাপনের জন্য খাবার", eventId]
+    );
+
+    console.log("✅ Sample expense created");
+
+    console.log("🎉 Database seeded successfully!");
+  } catch (error) {
+    console.error("❌ Seeding error:", error);
+    process.exit(1);
+  } finally {
+    await pool.end();
+  }
+}
+
+seed();
