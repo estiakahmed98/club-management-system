@@ -19,6 +19,9 @@ import type {
 import { prisma } from "@/lib/db";
 import MemberMarquee from "@/components/landing/MemberMarquee";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // ─────────────────────────────────────────────────────────────
 // HERO
 // ─────────────────────────────────────────────────────────────
@@ -48,29 +51,35 @@ async function getHeroSlides(): Promise<HeroSlide[]> {
 // ─────────────────────────────────────────────────────────────
 
 async function getStats(): Promise<ClubStats> {
-  const [
-    totalMembers,
-    totalMatches,
-    totalEvents,
-    totalWins,
-  ] = await Promise.all([
-    prisma.memberProfile.count(),
-    prisma.match.count(),
-    prisma.event.count(),
-    prisma.match.count({
-      where: {
-        result: "win",
-      },
-    }),
-  ]);
+  try {
+    const [totalMembers, totalMatches, totalEvents, totalWins] =
+      await Promise.all([
+        prisma.memberProfile.count(),
+        prisma.match.count(),
+        prisma.event.count(),
+        prisma.match.count({
+          where: {
+            result: "win",
+          },
+        }),
+      ]);
 
-  return {
-    totalMembers,
-    totalMatches,
-    totalWins,
-    totalEvents,
-    totalTrophies: 0,
-  };
+    return {
+      totalMembers,
+      totalMatches,
+      totalWins,
+      totalEvents,
+      totalTrophies: 0,
+    };
+  } catch {
+    return {
+      totalMembers: 0,
+      totalMatches: 0,
+      totalWins: 0,
+      totalEvents: 0,
+      totalTrophies: 0,
+    };
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -78,21 +87,29 @@ async function getStats(): Promise<ClubStats> {
 // ─────────────────────────────────────────────────────────────
 
 async function getLastMatches(): Promise<Match[]> {
-  const matches = await prisma.match.findMany({
-    orderBy: { matchDate: "desc" },
-    take: 5,
-  });
+  try {
+    const matches = await prisma.match.findMany({
+      orderBy: { matchDate: "desc" },
+      take: 5,
+    });
 
-  return matches as unknown as Match[];
+    return matches as unknown as Match[];
+  } catch {
+    return [];
+  }
 }
 
 async function getLastEvents(): Promise<Event[]> {
-  const events = await prisma.event.findMany({
-    orderBy: { eventDate: "desc" },
-    take: 5,
-  });
+  try {
+    const events = await prisma.event.findMany({
+      orderBy: { eventDate: "desc" },
+      take: 5,
+    });
 
-  return events as unknown as Event[];
+    return events as unknown as Event[];
+  } catch {
+    return [];
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
