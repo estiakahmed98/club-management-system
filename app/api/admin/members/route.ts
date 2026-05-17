@@ -8,9 +8,18 @@ interface CreateMemberRequestBody {
   phone?: string | null;
   bloodGroup?: string | null;
   jerseySize?: string | null;
+  jerseyNumber?: string | null;
+  address?: string | null;
+  bio?: string | null;
   email: string;
   password: string;
   teamCategory?: TeamCategory;
+  playsFootball?: boolean;
+  footballPosition?: string | null;
+  playsCricket?: boolean;
+  cricketRole?: string | null;
+  rating?: number | string | null;
+  imageUrl?: string | null;
 }
 
 interface MemberResponse {
@@ -21,8 +30,17 @@ interface MemberResponse {
   phone?: string | null;
   bloodGroup?: string | null;
   jerseySize?: string | null;
+  jerseyNumber?: string | null;
+  address?: string | null;
+  bio?: string | null;
   teamCategory: TeamCategory;
   joiningDate: Date;
+  playsFootball: boolean;
+  footballPosition?: string | null;
+  playsCricket: boolean;
+  cricketRole?: string | null;
+  rating: number;
+  imageUrl?: string | null;
 }
 
 interface PaginationResponse {
@@ -45,7 +63,10 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search")?.trim() || "";
     const bloodGroup = searchParams.get("bloodGroup")?.trim();
     const jerseySize = searchParams.get("jerseySize")?.trim();
+    const jerseyNumber = searchParams.get("jerseyNumber")?.trim();
     const teamCategoryParam = searchParams.get("teamCategory");
+    const playsFootball = searchParams.get("playsFootball") === "true";
+    const playsCricket = searchParams.get("playsCricket") === "true";
 
     const teamCategory = isValidTeamCategory(teamCategoryParam)
       ? teamCategoryParam
@@ -62,6 +83,10 @@ export async function GET(req: NextRequest) {
             OR: [
               { name: { contains: search, mode: "insensitive" } },
               { email: { contains: search, mode: "insensitive" } },
+              { phone: { contains: search, mode: "insensitive" } },
+              { jerseyNumber: { contains: search, mode: "insensitive" } },
+              { address: { contains: search, mode: "insensitive" } },
+              { bio: { contains: search, mode: "insensitive" } },
               {
                 user: {
                   email: { contains: search, mode: "insensitive" },
@@ -72,7 +97,10 @@ export async function GET(req: NextRequest) {
         : {}),
       ...(bloodGroup ? { bloodGroup } : {}),
       ...(jerseySize ? { jerseySize } : {}),
+      ...(jerseyNumber ? { jerseyNumber } : {}),
       ...(teamCategory ? { teamCategory } : {}),
+      ...(searchParams.has("playsFootball") ? { playsFootball } : {}),
+      ...(searchParams.has("playsCricket") ? { playsCricket } : {}),
     };
 
     const [total, members] = await prisma.$transaction([
@@ -102,8 +130,17 @@ export async function GET(req: NextRequest) {
       phone: member.phone,
       bloodGroup: member.bloodGroup,
       jerseySize: member.jerseySize,
+      jerseyNumber: member.jerseyNumber,
+      address: member.address,
+      bio: member.bio,
       teamCategory: member.teamCategory,
       joiningDate: member.joiningDate,
+      playsFootball: member.playsFootball,
+      footballPosition: member.footballPosition,
+      playsCricket: member.playsCricket,
+      cricketRole: member.cricketRole,
+      rating: member.rating,
+      imageUrl: member.imageUrl,
     }));
 
     const pagination: PaginationResponse = {
@@ -137,13 +174,30 @@ export async function POST(req: NextRequest) {
     const phone = body.phone?.trim() || null;
     const bloodGroup = body.bloodGroup?.trim() || null;
     const jerseySize = body.jerseySize?.trim() || null;
+    const jerseyNumber = body.jerseyNumber?.trim() || null;
+    const address = body.address?.trim() || null;
+    const bio = body.bio?.trim() || null;
     const teamCategory = body.teamCategory || "JUNIOR";
+    const playsFootball = body.playsFootball ?? true;
+    const footballPosition = body.footballPosition?.trim() || null;
+    const playsCricket = body.playsCricket ?? false;
+    const cricketRole = body.cricketRole?.trim() || null;
+    const ratingRaw = body.rating;
+    const rating =
+      ratingRaw === undefined || ratingRaw === null || ratingRaw === ""
+        ? 0
+        : Number(ratingRaw);
+    const imageUrl = body.imageUrl?.trim() || null;
 
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "Name, email, and password are required" },
         { status: 400 },
       );
+    }
+
+    if (!Number.isFinite(rating)) {
+      return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
     }
 
     if (!isValidTeamCategory(teamCategory)) {
@@ -183,7 +237,16 @@ export async function POST(req: NextRequest) {
           phone,
           bloodGroup,
           jerseySize,
+          jerseyNumber,
+          address,
+          bio,
           teamCategory,
+          playsFootball,
+          footballPosition,
+          playsCricket,
+          cricketRole,
+          rating,
+          imageUrl,
         },
       });
 
@@ -193,7 +256,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "Member created",
+        message: "Member created successfully",
         data: result,
       },
       { status: 201 },

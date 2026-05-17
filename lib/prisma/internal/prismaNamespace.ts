@@ -1214,8 +1214,14 @@ export const MemberProfileScalarFieldEnum = {
   jerseySize: 'jerseySize',
   jerseyNumber: 'jerseyNumber',
   address: 'address',
+  bio: 'bio',
   joiningDate: 'joiningDate',
-  photoUrl: 'photoUrl',
+  imageUrl: 'imageUrl',
+  playsFootball: 'playsFootball',
+  footballPosition: 'footballPosition',
+  playsCricket: 'playsCricket',
+  cricketRole: 'cricketRole',
+  rating: 'rating',
   teamCategory: 'teamCategory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1410,16 +1416,9 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'TeamCategory'
+ * Reference to a field of type 'Boolean'
  */
-export type EnumTeamCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamCategory'>
-    
-
-
-/**
- * Reference to a field of type 'TeamCategory[]'
- */
-export type ListEnumTeamCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamCategory[]'>
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1434,6 +1433,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TeamCategory'
+ */
+export type EnumTeamCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'TeamCategory[]'
+ */
+export type ListEnumTeamCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamCategory[]'>
     
 
 

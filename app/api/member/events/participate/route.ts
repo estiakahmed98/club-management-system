@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { executeQuery } from "@/lib/db";
-import { v4 as uuidv4 } from "uuid";
+import { prisma } from "@/lib/db";
+import { Prisma } from "@/lib/prisma/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,43 +13,40 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get member profile ID
-    const profileResult = await executeQuery(
-      'SELECT id FROM "MemberProfile" WHERE "userId" = $1',
-      [userId]
-    );
+    const profile = await prisma.memberProfile.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
 
-    if (profileResult.length === 0) {
-      return NextResponse.json(
-        { error: "Member not found" },
-        { status: 404 }
-      );
+    if (!profile) {
+      return NextResponse.json({ error: "Member not found" }, { status: 404 });
     }
 
-    const profileId = profileResult[0].id;
-
-    // Check if already participating
-    const existingResult = await executeQuery(
-      'SELECT id FROM "Participant" WHERE "eventId" = $1 AND "profileId" = $2',
-      [eventId, profileId]
-    );
-
-    if (existingResult.length > 0) {
-      return NextResponse.json(
-        { error: "Already participating in this event" },
-        { status: 400 }
-      );
-    }
-
-    // Add participation
-    const id = uuidv4();
-    await executeQuery(
-      'INSERT INTO "Participant" (id, "eventId", "profileId") VALUES ($1, $2, $3)',
-      [id, eventId, profileId]
-    );
+    await prisma.participant.create({
+      data: {
+        profileId: profile.id,
+        eventId,
+        status: "joined",
+      },
+    });
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return NextResponse.json(
+          { error: "Already participating in this event" },
+          { status: 400 },
+        );
+      }
+      if (error.code === "P2003") {
+        return NextResponse.json(
+          { error: "Event not found" },
+          { status: 404 },
+        );
+      }
+    }
+
     console.error("[PARTICIPATE ERROR]", error);
     return NextResponse.json(
       { error: "Failed to participate" },

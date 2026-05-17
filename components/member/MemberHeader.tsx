@@ -95,11 +95,11 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
             <Menu className="h-5 w-5" />
           </Button>
           <Link href="/member/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-linear-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Trophy className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hidden sm:inline">
-              ClubManager
+            <span className="font-bold text-xl bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hidden sm:inline">
+              Member Portal
             </span>
           </Link>
         </div>
@@ -152,7 +152,7 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
               <Button variant="ghost" className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 px-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={userPhoto} />
-                  <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                  <AvatarFallback className="bg-linear-to-r from-blue-600 to-purple-600 text-white">
                     {userName ? getInitials(userName) : "U"}
                   </AvatarFallback>
                 </Avatar>

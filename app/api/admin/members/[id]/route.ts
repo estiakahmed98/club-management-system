@@ -9,12 +9,74 @@ interface UpdateMemberRequestBody {
   phone?: string | null;
   bloodGroup?: string | null;
   jerseySize?: string | null;
+  jerseyNumber?: string | null;
+  address?: string | null;
+  bio?: string | null;
   teamCategory?: TeamCategory;
   password?: string;
+  playsFootball?: boolean;
+  footballPosition?: string | null;
+  playsCricket?: boolean;
+  cricketRole?: string | null;
+  rating?: number | string | null;
+  imageUrl?: string | null;
 }
 
 function isValidTeamCategory(value: unknown): value is TeamCategory {
   return value === "JUNIOR" || value === "SENIOR" || value === "GUEST";
+}
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params; // MemberProfile.id
+
+    const member = await prisma.memberProfile.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!member) {
+      return NextResponse.json({ error: "Member not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      id: member.id,
+      userId: member.userId,
+      name: member.name,
+      email: member.email || member.user.email,
+      phone: member.phone,
+      bloodGroup: member.bloodGroup,
+      jerseySize: member.jerseySize,
+      jerseyNumber: member.jerseyNumber,
+      address: member.address,
+      bio: member.bio,
+      teamCategory: member.teamCategory,
+      joiningDate: member.joiningDate,
+      playsFootball: member.playsFootball,
+      footballPosition: member.footballPosition,
+      playsCricket: member.playsCricket,
+      cricketRole: member.cricketRole,
+      rating: member.rating,
+      imageUrl: member.imageUrl,
+      createdAt: member.createdAt,
+      updatedAt: member.updatedAt,
+    });
+  } catch (error) {
+    console.error("[GET MEMBER ERROR]", error);
+    return NextResponse.json(
+      { error: "Failed to fetch member" },
+      { status: 500 },
+    );
+  }
 }
 
 export async function PUT(
@@ -30,14 +92,33 @@ export async function PUT(
     const phone = body.phone?.trim() || null;
     const bloodGroup = body.bloodGroup?.trim() || null;
     const jerseySize = body.jerseySize?.trim() || null;
+    const jerseyNumber = body.jerseyNumber?.trim() || null;
+    const address = body.address?.trim() || null;
+    const bio = body.bio?.trim() || null;
     const teamCategory = body.teamCategory;
     const password = body.password;
+    const playsFootball = body.playsFootball;
+    const footballPosition = body.footballPosition?.trim() || null;
+    const playsCricket = body.playsCricket;
+    const cricketRole = body.cricketRole?.trim() || null;
+    const ratingRaw = body.rating;
+    const rating =
+      ratingRaw === undefined
+        ? undefined
+        : ratingRaw === null || ratingRaw === ""
+          ? 0
+          : Number(ratingRaw);
+    const imageUrl = body.imageUrl?.trim() || null;
 
     if (!name || !email) {
       return NextResponse.json(
         { error: "Name and email are required" },
         { status: 400 },
       );
+    }
+
+    if (rating !== undefined && !Number.isFinite(rating)) {
+      return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
     }
 
     if (teamCategory && !isValidTeamCategory(teamCategory)) {
@@ -75,7 +156,16 @@ export async function PUT(
           phone,
           bloodGroup,
           jerseySize,
+          jerseyNumber,
+          address,
+          bio,
           ...(teamCategory ? { teamCategory } : {}),
+          ...(playsFootball !== undefined ? { playsFootball } : {}),
+          ...(footballPosition !== undefined ? { footballPosition } : {}),
+          ...(playsCricket !== undefined ? { playsCricket } : {}),
+          ...(cricketRole !== undefined ? { cricketRole } : {}),
+          ...(rating !== undefined ? { rating } : {}),
+          ...(imageUrl !== undefined ? { imageUrl } : {}),
         },
       });
 
@@ -132,4 +222,3 @@ export async function DELETE(
     );
   }
 }
-

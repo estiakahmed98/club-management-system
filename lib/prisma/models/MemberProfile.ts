@@ -20,8 +20,18 @@ export type MemberProfileModel = runtime.Types.Result.DefaultSelection<Prisma.$M
 
 export type AggregateMemberProfile = {
   _count: MemberProfileCountAggregateOutputType | null
+  _avg: MemberProfileAvgAggregateOutputType | null
+  _sum: MemberProfileSumAggregateOutputType | null
   _min: MemberProfileMinAggregateOutputType | null
   _max: MemberProfileMaxAggregateOutputType | null
+}
+
+export type MemberProfileAvgAggregateOutputType = {
+  rating: number | null
+}
+
+export type MemberProfileSumAggregateOutputType = {
+  rating: number | null
 }
 
 export type MemberProfileMinAggregateOutputType = {
@@ -34,8 +44,14 @@ export type MemberProfileMinAggregateOutputType = {
   jerseySize: string | null
   jerseyNumber: string | null
   address: string | null
+  bio: string | null
   joiningDate: Date | null
-  photoUrl: string | null
+  imageUrl: string | null
+  playsFootball: boolean | null
+  footballPosition: string | null
+  playsCricket: boolean | null
+  cricketRole: string | null
+  rating: number | null
   teamCategory: $Enums.TeamCategory | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -51,8 +67,14 @@ export type MemberProfileMaxAggregateOutputType = {
   jerseySize: string | null
   jerseyNumber: string | null
   address: string | null
+  bio: string | null
   joiningDate: Date | null
-  photoUrl: string | null
+  imageUrl: string | null
+  playsFootball: boolean | null
+  footballPosition: string | null
+  playsCricket: boolean | null
+  cricketRole: string | null
+  rating: number | null
   teamCategory: $Enums.TeamCategory | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -68,14 +90,28 @@ export type MemberProfileCountAggregateOutputType = {
   jerseySize: number
   jerseyNumber: number
   address: number
+  bio: number
   joiningDate: number
-  photoUrl: number
+  imageUrl: number
+  playsFootball: number
+  footballPosition: number
+  playsCricket: number
+  cricketRole: number
+  rating: number
   teamCategory: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type MemberProfileAvgAggregateInputType = {
+  rating?: true
+}
+
+export type MemberProfileSumAggregateInputType = {
+  rating?: true
+}
 
 export type MemberProfileMinAggregateInputType = {
   id?: true
@@ -87,8 +123,14 @@ export type MemberProfileMinAggregateInputType = {
   jerseySize?: true
   jerseyNumber?: true
   address?: true
+  bio?: true
   joiningDate?: true
-  photoUrl?: true
+  imageUrl?: true
+  playsFootball?: true
+  footballPosition?: true
+  playsCricket?: true
+  cricketRole?: true
+  rating?: true
   teamCategory?: true
   createdAt?: true
   updatedAt?: true
@@ -104,8 +146,14 @@ export type MemberProfileMaxAggregateInputType = {
   jerseySize?: true
   jerseyNumber?: true
   address?: true
+  bio?: true
   joiningDate?: true
-  photoUrl?: true
+  imageUrl?: true
+  playsFootball?: true
+  footballPosition?: true
+  playsCricket?: true
+  cricketRole?: true
+  rating?: true
   teamCategory?: true
   createdAt?: true
   updatedAt?: true
@@ -121,8 +169,14 @@ export type MemberProfileCountAggregateInputType = {
   jerseySize?: true
   jerseyNumber?: true
   address?: true
+  bio?: true
   joiningDate?: true
-  photoUrl?: true
+  imageUrl?: true
+  playsFootball?: true
+  footballPosition?: true
+  playsCricket?: true
+  cricketRole?: true
+  rating?: true
   teamCategory?: true
   createdAt?: true
   updatedAt?: true
@@ -167,6 +221,18 @@ export type MemberProfileAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: MemberProfileAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: MemberProfileSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: MemberProfileMinAggregateInputType
@@ -197,6 +263,8 @@ export type MemberProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: MemberProfileCountAggregateInputType | true
+  _avg?: MemberProfileAvgAggregateInputType
+  _sum?: MemberProfileSumAggregateInputType
   _min?: MemberProfileMinAggregateInputType
   _max?: MemberProfileMaxAggregateInputType
 }
@@ -211,12 +279,20 @@ export type MemberProfileGroupByOutputType = {
   jerseySize: string | null
   jerseyNumber: string | null
   address: string | null
+  bio: string | null
   joiningDate: Date
-  photoUrl: string | null
+  imageUrl: string | null
+  playsFootball: boolean
+  footballPosition: string | null
+  playsCricket: boolean
+  cricketRole: string | null
+  rating: number
   teamCategory: $Enums.TeamCategory
   createdAt: Date
   updatedAt: Date
   _count: MemberProfileCountAggregateOutputType | null
+  _avg: MemberProfileAvgAggregateOutputType | null
+  _sum: MemberProfileSumAggregateOutputType | null
   _min: MemberProfileMinAggregateOutputType | null
   _max: MemberProfileMaxAggregateOutputType | null
 }
@@ -249,8 +325,14 @@ export type MemberProfileWhereInput = {
   jerseySize?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   jerseyNumber?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   address?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  bio?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   joiningDate?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
-  photoUrl?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  playsFootball?: Prisma.BoolFilter<"MemberProfile"> | boolean
+  footballPosition?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  playsCricket?: Prisma.BoolFilter<"MemberProfile"> | boolean
+  cricketRole?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  rating?: Prisma.FloatFilter<"MemberProfile"> | number
   teamCategory?: Prisma.EnumTeamCategoryFilter<"MemberProfile"> | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
@@ -268,8 +350,14 @@ export type MemberProfileOrderByWithRelationInput = {
   jerseySize?: Prisma.SortOrderInput | Prisma.SortOrder
   jerseyNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
-  photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  playsFootball?: Prisma.SortOrder
+  footballPosition?: Prisma.SortOrderInput | Prisma.SortOrder
+  playsCricket?: Prisma.SortOrder
+  cricketRole?: Prisma.SortOrderInput | Prisma.SortOrder
+  rating?: Prisma.SortOrder
   teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -290,8 +378,14 @@ export type MemberProfileWhereUniqueInput = Prisma.AtLeast<{
   jerseySize?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   jerseyNumber?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   address?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  bio?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
   joiningDate?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
-  photoUrl?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  playsFootball?: Prisma.BoolFilter<"MemberProfile"> | boolean
+  footballPosition?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  playsCricket?: Prisma.BoolFilter<"MemberProfile"> | boolean
+  cricketRole?: Prisma.StringNullableFilter<"MemberProfile"> | string | null
+  rating?: Prisma.FloatFilter<"MemberProfile"> | number
   teamCategory?: Prisma.EnumTeamCategoryFilter<"MemberProfile"> | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MemberProfile"> | Date | string
@@ -309,14 +403,22 @@ export type MemberProfileOrderByWithAggregationInput = {
   jerseySize?: Prisma.SortOrderInput | Prisma.SortOrder
   jerseyNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
-  photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  playsFootball?: Prisma.SortOrder
+  footballPosition?: Prisma.SortOrderInput | Prisma.SortOrder
+  playsCricket?: Prisma.SortOrder
+  cricketRole?: Prisma.SortOrderInput | Prisma.SortOrder
+  rating?: Prisma.SortOrder
   teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MemberProfileCountOrderByAggregateInput
+  _avg?: Prisma.MemberProfileAvgOrderByAggregateInput
   _max?: Prisma.MemberProfileMaxOrderByAggregateInput
   _min?: Prisma.MemberProfileMinOrderByAggregateInput
+  _sum?: Prisma.MemberProfileSumOrderByAggregateInput
 }
 
 export type MemberProfileScalarWhereWithAggregatesInput = {
@@ -332,8 +434,14 @@ export type MemberProfileScalarWhereWithAggregatesInput = {
   jerseySize?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
   jerseyNumber?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
+  bio?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
   joiningDate?: Prisma.DateTimeWithAggregatesFilter<"MemberProfile"> | Date | string
-  photoUrl?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
+  playsFootball?: Prisma.BoolWithAggregatesFilter<"MemberProfile"> | boolean
+  footballPosition?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
+  playsCricket?: Prisma.BoolWithAggregatesFilter<"MemberProfile"> | boolean
+  cricketRole?: Prisma.StringNullableWithAggregatesFilter<"MemberProfile"> | string | null
+  rating?: Prisma.FloatWithAggregatesFilter<"MemberProfile"> | number
   teamCategory?: Prisma.EnumTeamCategoryWithAggregatesFilter<"MemberProfile"> | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MemberProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MemberProfile"> | Date | string
@@ -348,8 +456,14 @@ export type MemberProfileCreateInput = {
   jerseySize?: string | null
   jerseyNumber?: string | null
   address?: string | null
+  bio?: string | null
   joiningDate?: Date | string
-  photoUrl?: string | null
+  imageUrl?: string | null
+  playsFootball?: boolean
+  footballPosition?: string | null
+  playsCricket?: boolean
+  cricketRole?: string | null
+  rating?: number
   teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -367,8 +481,14 @@ export type MemberProfileUncheckedCreateInput = {
   jerseySize?: string | null
   jerseyNumber?: string | null
   address?: string | null
+  bio?: string | null
   joiningDate?: Date | string
-  photoUrl?: string | null
+  imageUrl?: string | null
+  playsFootball?: boolean
+  footballPosition?: string | null
+  playsCricket?: boolean
+  cricketRole?: string | null
+  rating?: number
   teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -384,8 +504,14 @@ export type MemberProfileUpdateInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -403,8 +529,14 @@ export type MemberProfileUncheckedUpdateInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -421,8 +553,14 @@ export type MemberProfileCreateManyInput = {
   jerseySize?: string | null
   jerseyNumber?: string | null
   address?: string | null
+  bio?: string | null
   joiningDate?: Date | string
-  photoUrl?: string | null
+  imageUrl?: string | null
+  playsFootball?: boolean
+  footballPosition?: string | null
+  playsCricket?: boolean
+  cricketRole?: string | null
+  rating?: number
   teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -437,8 +575,14 @@ export type MemberProfileUpdateManyMutationInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -454,8 +598,14 @@ export type MemberProfileUncheckedUpdateManyInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,11 +626,21 @@ export type MemberProfileCountOrderByAggregateInput = {
   jerseySize?: Prisma.SortOrder
   jerseyNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
-  photoUrl?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  playsFootball?: Prisma.SortOrder
+  footballPosition?: Prisma.SortOrder
+  playsCricket?: Prisma.SortOrder
+  cricketRole?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MemberProfileAvgOrderByAggregateInput = {
+  rating?: Prisma.SortOrder
 }
 
 export type MemberProfileMaxOrderByAggregateInput = {
@@ -493,8 +653,14 @@ export type MemberProfileMaxOrderByAggregateInput = {
   jerseySize?: Prisma.SortOrder
   jerseyNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
-  photoUrl?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  playsFootball?: Prisma.SortOrder
+  footballPosition?: Prisma.SortOrder
+  playsCricket?: Prisma.SortOrder
+  cricketRole?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -510,11 +676,21 @@ export type MemberProfileMinOrderByAggregateInput = {
   jerseySize?: Prisma.SortOrder
   jerseyNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
   joiningDate?: Prisma.SortOrder
-  photoUrl?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  playsFootball?: Prisma.SortOrder
+  footballPosition?: Prisma.SortOrder
+  playsCricket?: Prisma.SortOrder
+  cricketRole?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   teamCategory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MemberProfileSumOrderByAggregateInput = {
+  rating?: Prisma.SortOrder
 }
 
 export type MemberProfileScalarRelationFilter = {
@@ -558,6 +734,18 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type EnumTeamCategoryFieldUpdateOperationsInput = {
   set?: $Enums.TeamCategory
 }
@@ -585,8 +773,14 @@ export type MemberProfileCreateWithoutUserInput = {
   jerseySize?: string | null
   jerseyNumber?: string | null
   address?: string | null
+  bio?: string | null
   joiningDate?: Date | string
-  photoUrl?: string | null
+  imageUrl?: string | null
+  playsFootball?: boolean
+  footballPosition?: string | null
+  playsCricket?: boolean
+  cricketRole?: string | null
+  rating?: number
   teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -602,8 +796,14 @@ export type MemberProfileUncheckedCreateWithoutUserInput = {
   jerseySize?: string | null
   jerseyNumber?: string | null
   address?: string | null
+  bio?: string | null
   joiningDate?: Date | string
-  photoUrl?: string | null
+  imageUrl?: string | null
+  playsFootball?: boolean
+  footballPosition?: string | null
+  playsCricket?: boolean
+  cricketRole?: string | null
+  rating?: number
   teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -635,8 +835,14 @@ export type MemberProfileUpdateWithoutUserInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -652,8 +858,14 @@ export type MemberProfileUncheckedUpdateWithoutUserInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -669,8 +881,14 @@ export type MemberProfileCreateWithoutParticipantsInput = {
   jerseySize?: string | null
   jerseyNumber?: string | null
   address?: string | null
+  bio?: string | null
   joiningDate?: Date | string
-  photoUrl?: string | null
+  imageUrl?: string | null
+  playsFootball?: boolean
+  footballPosition?: string | null
+  playsCricket?: boolean
+  cricketRole?: string | null
+  rating?: number
   teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -687,8 +905,14 @@ export type MemberProfileUncheckedCreateWithoutParticipantsInput = {
   jerseySize?: string | null
   jerseyNumber?: string | null
   address?: string | null
+  bio?: string | null
   joiningDate?: Date | string
-  photoUrl?: string | null
+  imageUrl?: string | null
+  playsFootball?: boolean
+  footballPosition?: string | null
+  playsCricket?: boolean
+  cricketRole?: string | null
+  rating?: number
   teamCategory?: $Enums.TeamCategory
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -719,8 +943,14 @@ export type MemberProfileUpdateWithoutParticipantsInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -737,8 +967,14 @@ export type MemberProfileUncheckedUpdateWithoutParticipantsInput = {
   jerseySize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jerseyNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   joiningDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsFootball?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  footballPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  playsCricket?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cricketRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   teamCategory?: Prisma.EnumTeamCategoryFieldUpdateOperationsInput | $Enums.TeamCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -785,8 +1021,14 @@ export type MemberProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   jerseySize?: boolean
   jerseyNumber?: boolean
   address?: boolean
+  bio?: boolean
   joiningDate?: boolean
-  photoUrl?: boolean
+  imageUrl?: boolean
+  playsFootball?: boolean
+  footballPosition?: boolean
+  playsCricket?: boolean
+  cricketRole?: boolean
+  rating?: boolean
   teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -805,8 +1047,14 @@ export type MemberProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   jerseySize?: boolean
   jerseyNumber?: boolean
   address?: boolean
+  bio?: boolean
   joiningDate?: boolean
-  photoUrl?: boolean
+  imageUrl?: boolean
+  playsFootball?: boolean
+  footballPosition?: boolean
+  playsCricket?: boolean
+  cricketRole?: boolean
+  rating?: boolean
   teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -823,8 +1071,14 @@ export type MemberProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   jerseySize?: boolean
   jerseyNumber?: boolean
   address?: boolean
+  bio?: boolean
   joiningDate?: boolean
-  photoUrl?: boolean
+  imageUrl?: boolean
+  playsFootball?: boolean
+  footballPosition?: boolean
+  playsCricket?: boolean
+  cricketRole?: boolean
+  rating?: boolean
   teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -841,14 +1095,20 @@ export type MemberProfileSelectScalar = {
   jerseySize?: boolean
   jerseyNumber?: boolean
   address?: boolean
+  bio?: boolean
   joiningDate?: boolean
-  photoUrl?: boolean
+  imageUrl?: boolean
+  playsFootball?: boolean
+  footballPosition?: boolean
+  playsCricket?: boolean
+  cricketRole?: boolean
+  rating?: boolean
   teamCategory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MemberProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "phone" | "email" | "bloodGroup" | "jerseySize" | "jerseyNumber" | "address" | "joiningDate" | "photoUrl" | "teamCategory" | "createdAt" | "updatedAt", ExtArgs["result"]["memberProfile"]>
+export type MemberProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "phone" | "email" | "bloodGroup" | "jerseySize" | "jerseyNumber" | "address" | "bio" | "joiningDate" | "imageUrl" | "playsFootball" | "footballPosition" | "playsCricket" | "cricketRole" | "rating" | "teamCategory" | "createdAt" | "updatedAt", ExtArgs["result"]["memberProfile"]>
 export type MemberProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   participants?: boolean | Prisma.MemberProfile$participantsArgs<ExtArgs>
@@ -877,8 +1137,14 @@ export type $MemberProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     jerseySize: string | null
     jerseyNumber: string | null
     address: string | null
+    bio: string | null
     joiningDate: Date
-    photoUrl: string | null
+    imageUrl: string | null
+    playsFootball: boolean
+    footballPosition: string | null
+    playsCricket: boolean
+    cricketRole: string | null
+    rating: number
     teamCategory: $Enums.TeamCategory
     createdAt: Date
     updatedAt: Date
@@ -1316,8 +1582,14 @@ export interface MemberProfileFieldRefs {
   readonly jerseySize: Prisma.FieldRef<"MemberProfile", 'String'>
   readonly jerseyNumber: Prisma.FieldRef<"MemberProfile", 'String'>
   readonly address: Prisma.FieldRef<"MemberProfile", 'String'>
+  readonly bio: Prisma.FieldRef<"MemberProfile", 'String'>
   readonly joiningDate: Prisma.FieldRef<"MemberProfile", 'DateTime'>
-  readonly photoUrl: Prisma.FieldRef<"MemberProfile", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"MemberProfile", 'String'>
+  readonly playsFootball: Prisma.FieldRef<"MemberProfile", 'Boolean'>
+  readonly footballPosition: Prisma.FieldRef<"MemberProfile", 'String'>
+  readonly playsCricket: Prisma.FieldRef<"MemberProfile", 'Boolean'>
+  readonly cricketRole: Prisma.FieldRef<"MemberProfile", 'String'>
+  readonly rating: Prisma.FieldRef<"MemberProfile", 'Float'>
   readonly teamCategory: Prisma.FieldRef<"MemberProfile", 'TeamCategory'>
   readonly createdAt: Prisma.FieldRef<"MemberProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MemberProfile", 'DateTime'>

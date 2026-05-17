@@ -470,14 +470,6 @@ export type EventNullableScalarRelationFilter = {
   isNot?: Prisma.EventWhereInput | null
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EventCreateNestedOneWithoutPaymentsInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutPaymentsInput, Prisma.EventUncheckedCreateWithoutPaymentsInput>
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutPaymentsInput

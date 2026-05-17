@@ -13,6 +13,7 @@ import Members from "@/components/landing/Members";
 import Footer from "@/components/landing/Footer";
 
 import type { ClubStats, Event, GalleryItem, HeroSlide, Match, MemberProfile } from "@/types/club";
+import { prisma } from "@/lib/db";
 
 // ─── Data fetching (server-side) ────────────────────────────────────────────
 // Replace these with real Prisma queries in your API routes / server actions
@@ -26,48 +27,62 @@ async function getHeroSlides(): Promise<HeroSlide[]> {
 }
 
 async function getStats(): Promise<ClubStats> {
-  // Example Prisma:
-  // const [members, matches, events] = await Promise.all([
-  //   prisma.memberProfile.count(),
-  //   prisma.match.count(),
-  //   prisma.event.count(),
-  // ])
+  const [totalMembers, totalMatches, totalEvents, totalWins] =
+    await Promise.all([
+      prisma.memberProfile.count(),
+      prisma.match.count(),
+      prisma.event.count(),
+      prisma.match.count({ where: { result: "win" } }),
+    ]);
+
   return {
-    totalMembers: 24,
-    totalMatches: 18,
-    totalWins: 11,
-    totalEvents: 7,
-    totalTrophies: 3,
+    totalMembers,
+    totalMatches,
+    totalWins,
+    totalEvents,
+    totalTrophies: 0,
   };
 }
 
 async function getRecentEvents(): Promise<Event[]> {
-  // Example Prisma:
-  // return prisma.event.findMany({ orderBy: { eventDate: "desc" }, take: 6 })
-  return [];
+  const events = await prisma.event.findMany({
+    orderBy: { eventDate: "desc" },
+    take: 6,
+  });
+  return events as unknown as Event[];
 }
 
 async function getRecentMatches(): Promise<Match[]> {
-  // Example Prisma:
-  // return prisma.match.findMany({ orderBy: { matchDate: "desc" }, take: 5 })
-  return [];
+  const matches = await prisma.match.findMany({
+    orderBy: { matchDate: "desc" },
+    take: 5,
+  });
+  return matches as unknown as Match[];
 }
 
 async function getGalleryItems(): Promise<GalleryItem[]> {
-  return [
+  const items = await prisma.galleryItem.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 12,
+  });
+  return items as unknown as GalleryItem[];
+
+  /* return [
     { id: "1", title: "ম্যাচের মুহূর্ত", imageUrl: "/assets/image.jpeg", description: "ক্রীড়া • ২০২৫" },
     { id: "2", title: "ইফতার পার্টি ২০২৫", imageUrl: "/assets/image1.jpeg", description: "ইভেন্ট • রমজান" },
     { id: "3", title: "চ্যাম্পিয়নস কাপ", imageUrl: "/assets/image3.jpeg", description: "টুর্নামেন্ট • ২০২৪" },
     { id: "4", title: "ঈদ সেলিব্রেশন", imageUrl: "/assets/image4.jpeg", description: "ইভেন্ট • ২০২৪" },
     { id: "5", title: "পিকনিক ২০২৪", imageUrl: "/assets/image5.jpeg", description: "আনন্দ • প্রকৃতি" },
     { id: "6", title: "ট্রেনিং সেশন", imageUrl: "/assets/image6.jpeg", description: "প্রস্তুতি • ২০২৫" },
-  ];
+  ]; */
 }
 
 async function getMembers(): Promise<MemberProfile[]> {
-  // Example Prisma:
-  // return prisma.memberProfile.findMany({ orderBy: { joiningDate: "asc" } })
-  return [];
+  const members = await prisma.memberProfile.findMany({
+    orderBy: { joiningDate: "asc" },
+    take: 12,
+  });
+  return members as unknown as MemberProfile[];
 }
 
 // ─── Page ───────────────────────────────────────────────────────────────────

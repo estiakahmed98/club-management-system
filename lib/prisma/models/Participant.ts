@@ -238,7 +238,9 @@ export type ParticipantOrderByWithRelationInput = {
 
 export type ParticipantWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  profileId_eventId_matchId_tournamentId?: Prisma.ParticipantProfileIdEventIdMatchIdTournamentIdCompoundUniqueInput
+  profileId_eventId?: Prisma.ParticipantProfileIdEventIdCompoundUniqueInput
+  profileId_matchId?: Prisma.ParticipantProfileIdMatchIdCompoundUniqueInput
+  profileId_tournamentId?: Prisma.ParticipantProfileIdTournamentIdCompoundUniqueInput
   AND?: Prisma.ParticipantWhereInput | Prisma.ParticipantWhereInput[]
   OR?: Prisma.ParticipantWhereInput[]
   NOT?: Prisma.ParticipantWhereInput | Prisma.ParticipantWhereInput[]
@@ -254,7 +256,7 @@ export type ParticipantWhereUniqueInput = Prisma.AtLeast<{
   event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   match?: Prisma.XOR<Prisma.MatchNullableScalarRelationFilter, Prisma.MatchWhereInput> | null
   tournament?: Prisma.XOR<Prisma.TournamentNullableScalarRelationFilter, Prisma.TournamentWhereInput> | null
-}, "id" | "profileId_eventId_matchId_tournamentId">
+}, "id" | "profileId_eventId" | "profileId_matchId" | "profileId_tournamentId">
 
 export type ParticipantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -376,10 +378,18 @@ export type ParticipantOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ParticipantProfileIdEventIdMatchIdTournamentIdCompoundUniqueInput = {
+export type ParticipantProfileIdEventIdCompoundUniqueInput = {
   profileId: string
   eventId: string
+}
+
+export type ParticipantProfileIdMatchIdCompoundUniqueInput = {
+  profileId: string
   matchId: string
+}
+
+export type ParticipantProfileIdTournamentIdCompoundUniqueInput = {
+  profileId: string
   tournamentId: string
 }
 

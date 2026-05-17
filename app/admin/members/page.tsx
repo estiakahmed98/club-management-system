@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -45,8 +46,17 @@ interface Member {
   phone?: string;
   bloodGroup?: string;
   jerseySize?: string;
+  jerseyNumber?: string;
+  address?: string;
+  bio?: string;
   joiningDate: string;
   teamCategory: string;
+  playsFootball: boolean;
+  footballPosition?: string;
+  playsCricket: boolean;
+  cricketRole?: string;
+  rating: number;
+  imageUrl?: string | null;
 }
 
 interface PaginationData {
@@ -66,6 +76,8 @@ export default function MembersPage() {
   const [teamCategoryFilter, setTeamCategoryFilter] = useState<string>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [viewingMember, setViewingMember] = useState<Member | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [pagination, setPagination] = useState<PaginationData>({
     total: 0,
@@ -80,13 +92,33 @@ export default function MembersPage() {
     phone: "",
     bloodGroup: "",
     jerseySize: "",
+    jerseyNumber: "",
+    address: "",
+    bio: "",
+    rating: "",
     teamCategory: "JUNIOR",
+    imageUrl: "",
+    playsFootball: true,
+    footballPosition: "",
+    playsCricket: false,
+    cricketRole: "",
   });
+  const [imageUploading, setImageUploading] = useState(false);
 
   // Blood groups and jersey sizes for filters
   const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
   const jerseySizes = ["S", "M", "L", "XL", "XXL", "XXXL"];
   const teamCategories = ["JUNIOR", "SENIOR", "GUEST"];
+
+  // Football positions and cricket roles
+  const footballPositions = [
+    "Goalkeeper",
+    "Defender",
+    "Midfielder",
+    "Forward",
+    "Winger",
+  ];
+  const cricketRoles = ["Batsman", "Bowler", "All-rounder", "Wicket-keeper"];
 
   // Debounce search input
   useEffect(() => {
@@ -110,11 +142,14 @@ export default function MembersPage() {
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
       });
-      
+
       if (debouncedSearch) params.append("search", debouncedSearch);
-      if (bloodGroupFilter !== "all") params.append("bloodGroup", bloodGroupFilter);
-      if (jerseySizeFilter !== "all") params.append("jerseySize", jerseySizeFilter);
-      if (teamCategoryFilter !== "all") params.append("teamCategory", teamCategoryFilter);
+      if (bloodGroupFilter !== "all")
+        params.append("bloodGroup", bloodGroupFilter);
+      if (jerseySizeFilter !== "all")
+        params.append("jerseySize", jerseySizeFilter);
+      if (teamCategoryFilter !== "all")
+        params.append("teamCategory", teamCategoryFilter);
 
       const response = await fetch(`/api/admin/members?${params}`);
       if (!response.ok) throw new Error("Failed to fetch members");
@@ -179,14 +214,71 @@ export default function MembersPage() {
       phone: member.phone || "",
       bloodGroup: member.bloodGroup || "",
       jerseySize: member.jerseySize || "",
+      jerseyNumber: member.jerseyNumber || "",
+      address: member.address || "",
+      bio: member.bio || "",
+      rating: Number.isFinite(member.rating) ? String(member.rating) : "",
       teamCategory: member.teamCategory,
+      imageUrl: member.imageUrl || "",
+      playsFootball: member.playsFootball ?? true,
+      footballPosition: member.footballPosition || "",
+      playsCricket: member.playsCricket ?? false,
+      cricketRole: member.cricketRole || "",
     });
     setDialogOpen(true);
   };
 
+  const handleView = (member: Member) => {
+    setViewingMember(member);
+    setViewDialogOpen(true);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      setImageUploading(true);
+      const uploadForm = new FormData();
+      uploadForm.append("file", file);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: uploadForm,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to upload image");
+      }
+
+      const fileUrl = data?.fileUrl as string | undefined;
+      if (!fileUrl) {
+        throw new Error("Upload succeeded but no file URL returned");
+      }
+
+      setFormData((prev) => ({ ...prev, imageUrl: fileUrl }));
+      toast({
+        title: "Uploaded",
+        description: "Member photo uploaded successfully",
+      });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast({
+        title: "Upload Error",
+        description:
+          error instanceof Error ? error.message : "Failed to upload image",
+        variant: "destructive",
+      });
+    } finally {
+      setImageUploading(false);
+    }
+  };
+
   const handleSave = async () => {
     const needsPassword = !editingId;
-    if (!formData.name || !formData.email || (needsPassword && !formData.password)) {
+    if (
+      !formData.name ||
+      !formData.email ||
+      (needsPassword && !formData.password)
+    ) {
       toast({
         title: "Validation Error",
         description: needsPassword
@@ -203,10 +295,40 @@ export default function MembersPage() {
         : "/api/admin/members";
       const method = editingId ? "PUT" : "POST";
 
+      if (imageUploading) {
+        toast({
+          title: "Please wait",
+          description: "Image upload is still in progress",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const rating =
+        formData.rating === "" ||
+        formData.rating === null ||
+        formData.rating === undefined
+          ? undefined
+          : Number(formData.rating);
+
+      if (rating !== undefined && !Number.isFinite(rating)) {
+        toast({
+          title: "Validation Error",
+          description: "Rating must be a valid number",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const payload = {
+        ...formData,
+        rating,
+      };
+
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -230,7 +352,16 @@ export default function MembersPage() {
         phone: "",
         bloodGroup: "",
         jerseySize: "",
+        jerseyNumber: "",
+        address: "",
+        bio: "",
+        rating: "",
         teamCategory: "JUNIOR",
+        imageUrl: "",
+        playsFootball: true,
+        footballPosition: "",
+        playsCricket: false,
+        cricketRole: "",
       });
       fetchMembers();
     } catch (error) {
@@ -261,18 +392,25 @@ export default function MembersPage() {
       "A-": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
       "B+": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
       "B-": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-      "AB+": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-      "AB-": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      "AB+":
+        "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      "AB-":
+        "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
       "O+": "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
       "O-": "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
     };
-    return colors[bloodGroup] || "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
+    return (
+      colors[bloodGroup] ||
+      "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+    );
   };
 
   const getTeamCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      JUNIOR: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-      SENIOR: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      JUNIOR:
+        "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+      SENIOR:
+        "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
       GUEST: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
     };
     return colors[category] || "bg-gray-100 text-gray-800";
@@ -301,7 +439,16 @@ export default function MembersPage() {
               phone: "",
               bloodGroup: "",
               jerseySize: "",
+              jerseyNumber: "",
+              address: "",
+              bio: "",
+              rating: "",
               teamCategory: "JUNIOR",
+              imageUrl: "",
+              playsFootball: true,
+              footballPosition: "",
+              playsCricket: false,
+              cricketRole: "",
             });
             setDialogOpen(true);
           }}
@@ -502,7 +649,25 @@ export default function MembersPage() {
                         Blood Group
                       </th>
                       <th className="px-6 py-3 text-left text-sm font-semibold">
-                        Jersey
+                        Jersey Size
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Jersey No.
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Rating
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Address
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Bio
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Football
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Cricket
                       </th>
                       <th className="px-6 py-3 text-left text-sm font-semibold">
                         Team Category
@@ -522,8 +687,24 @@ export default function MembersPage() {
                         className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <td className="px-6 py-4">
-                          <div className="font-medium text-gray-900 dark:text-white">
-                            {member.name}
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+                              {member.imageUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={member.imageUrl}
+                                  alt={member.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                  {member.name?.charAt(0)?.toUpperCase()}
+                                </div>
+                              )}
+                            </div>
+                            <div className="font-medium text-gray-900 dark:text-white">
+                              {member.name}
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
@@ -559,8 +740,81 @@ export default function MembersPage() {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          <Badge className={getTeamCategoryColor(member.teamCategory)}>
-                            {member.teamCategory.charAt(0) + member.teamCategory.slice(1).toLowerCase()}
+                          {member.jerseyNumber ? (
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                              {member.jerseyNumber}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 text-sm">—</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="text-sm text-gray-900 dark:text-white">
+                            {Number.isFinite(member.rating)
+                              ? member.rating.toFixed(1)
+                              : "0.0"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {member.address ? (
+                            <span
+                              className="text-sm text-gray-600 dark:text-gray-300 max-w-[220px] block truncate"
+                              title={member.address}
+                            >
+                              {member.address}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 text-sm">—</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {member.bio ? (
+                            <span
+                              className="text-sm text-gray-600 dark:text-gray-300 max-w-[240px] block truncate"
+                              title={member.bio}
+                            >
+                              {member.bio}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 text-sm">—</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {member.playsFootball ? (
+                            <div className="space-y-1">
+                              <Badge variant="secondary">Yes</Badge>
+                              {member.footballPosition && (
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  {member.footballPosition}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <Badge variant="outline">No</Badge>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {member.playsCricket ? (
+                            <div className="space-y-1">
+                              <Badge variant="secondary">Yes</Badge>
+                              {member.cricketRole && (
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  {member.cricketRole}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <Badge variant="outline">No</Badge>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge
+                            className={getTeamCategoryColor(
+                              member.teamCategory,
+                            )}
+                          >
+                            {member.teamCategory.charAt(0) +
+                              member.teamCategory.slice(1).toLowerCase()}
                           </Badge>
                         </td>
                         <td className="px-6 py-4">
@@ -571,6 +825,14 @@ export default function MembersPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center space-x-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleView(member)}
+                              className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -668,7 +930,7 @@ export default function MembersPage() {
 
       {/* Add/Edit Member Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>
               {editingId ? "Edit Member" : "Add New Member"}
@@ -712,7 +974,11 @@ export default function MembersPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  placeholder={editingId ? "Leave blank to keep current password" : "Set a password"}
+                  placeholder={
+                    editingId
+                      ? "Leave blank to keep current password"
+                      : "Set a password"
+                  }
                   className="pr-10"
                 />
                 <button
@@ -729,19 +995,77 @@ export default function MembersPage() {
                 </button>
               </div>
             </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Phone Number
+                </label>
+                <Input
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  placeholder="+880 1234 567890"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">Rating</label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={formData.rating}
+                  onChange={(e) =>
+                    setFormData({ ...formData, rating: e.target.value })
+                  }
+                  placeholder="0"
+                />
+              </div>
+            </div>
             <div>
               <label className="text-sm font-medium mb-1 block">
-                Phone Number
+                Member Photo
               </label>
-              <Input
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                placeholder="+880 1234 567890"
-              />
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+                  {formData.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={formData.imageUrl}
+                      alt="Member photo preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs font-semibold text-gray-500 dark:text-gray-400">
+                      —
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    disabled={imageUploading}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      void handleImageUpload(file);
+                      e.currentTarget.value = "";
+                    }}
+                  />
+                  {formData.imageUrl && (
+                    <button
+                      type="button"
+                      className="mt-2 text-xs text-red-600 hover:underline"
+                      onClick={() => setFormData({ ...formData, imageUrl: "" })}
+                      disabled={imageUploading}
+                    >
+                      Remove photo
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   Blood Group
@@ -749,7 +1073,10 @@ export default function MembersPage() {
                 <Select
                   value={formData.bloodGroup || "none"}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, bloodGroup: value === "none" ? "" : value })
+                    setFormData({
+                      ...formData,
+                      bloodGroup: value === "none" ? "" : value,
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -772,7 +1099,10 @@ export default function MembersPage() {
                 <Select
                   value={formData.jerseySize || "none"}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, jerseySize: value === "none" ? "" : value })
+                    setFormData({
+                      ...formData,
+                      jerseySize: value === "none" ? "" : value,
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -787,6 +1117,18 @@ export default function MembersPage() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Jersey Number
+                </label>
+                <Input
+                  value={formData.jerseyNumber}
+                  onChange={(e) =>
+                    setFormData({ ...formData, jerseyNumber: e.target.value })
+                  }
+                  placeholder="e.g. 10"
+                />
               </div>
               <div>
                 <label className="text-sm font-medium mb-1 block">
@@ -811,10 +1153,279 @@ export default function MembersPage() {
                 </Select>
               </div>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Address
+                </label>
+                <Textarea
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
+                  placeholder="Enter address"
+                  rows={3}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">Bio</label>
+                <Textarea
+                  value={formData.bio}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bio: e.target.value })
+                  }
+                  placeholder="Short bio"
+                  rows={3}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Sports</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.playsFootball}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        playsFootball: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 rounded"
+                  />
+                  <span className="text-sm">Football</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.playsCricket}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        playsCricket: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 rounded"
+                  />
+                  <span className="text-sm">Cricket</span>
+                </label>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {formData.playsFootball && (
+                <div>
+                  <label className="text-sm font-medium mb-1 block">
+                    Football Position
+                  </label>
+                  <Select
+                    value={formData.footballPosition || "none"}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        footballPosition: value === "none" ? "" : value,
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select position" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {footballPositions.map((position) => (
+                        <SelectItem key={position} value={position}>
+                          {position}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              {formData.playsCricket && (
+                <div>
+                  <label className="text-sm font-medium mb-1 block">
+                    Cricket Role
+                  </label>
+                  <Select
+                    value={formData.cricketRole || "none"}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        cricketRole: value === "none" ? "" : value,
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {cricketRoles.map((role) => (
+                        <SelectItem key={role} value={role}>
+                          {role}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
             <Button onClick={handleSave} className="w-full">
               {editingId ? "Update Member" : "Create Member"}
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Member Dialog */}
+      <Dialog
+        open={viewDialogOpen}
+        onOpenChange={(open) => {
+          setViewDialogOpen(open);
+          if (!open) setViewingMember(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Member Details</DialogTitle>
+          </DialogHeader>
+          {viewingMember ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+                  {viewingMember.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={viewingMember.imageUrl}
+                      alt={viewingMember.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-sm font-semibold text-gray-500 dark:text-gray-400">
+                      {viewingMember.name?.charAt(0)?.toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {viewingMember.name}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {viewingMember.email}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">Phone</div>
+                  <div className="text-gray-900 dark:text-white">
+                    {viewingMember.phone || "—"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Team Category
+                  </div>
+                  <div className="text-gray-900 dark:text-white">
+                    {viewingMember.teamCategory}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Blood Group
+                  </div>
+                  <div className="text-gray-900 dark:text-white">
+                    {viewingMember.bloodGroup || "—"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">Joined</div>
+                  <div className="text-gray-900 dark:text-white">
+                    {new Date(viewingMember.joiningDate).toLocaleDateString()}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Jersey Size
+                  </div>
+                  <div className="text-gray-900 dark:text-white">
+                    {viewingMember.jerseySize || "—"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Jersey Number
+                  </div>
+                  <div className="text-gray-900 dark:text-white">
+                    {viewingMember.jerseyNumber || "—"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">Rating</div>
+                  <div className="text-gray-900 dark:text-white">
+                    {Number.isFinite(viewingMember.rating)
+                      ? viewingMember.rating.toFixed(1)
+                      : "0.0"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Football
+                  </div>
+                  <div className="text-gray-900 dark:text-white">
+                    {viewingMember.playsFootball
+                      ? viewingMember.footballPosition || "Yes"
+                      : "No"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Cricket
+                  </div>
+                  <div className="text-gray-900 dark:text-white">
+                    {viewingMember.playsCricket
+                      ? viewingMember.cricketRole || "Yes"
+                      : "No"}
+                  </div>
+                </div>
+                <div className="sm:col-span-2">
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Address
+                  </div>
+                  <div className="text-gray-900 dark:text-white whitespace-pre-wrap">
+                    {viewingMember.address || "—"}
+                  </div>
+                </div>
+                <div className="sm:col-span-2">
+                  <div className="text-gray-500 dark:text-gray-400">Bio</div>
+                  <div className="text-gray-900 dark:text-white whitespace-pre-wrap">
+                    {viewingMember.bio || "—"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setViewDialogOpen(false);
+                    setViewingMember(null);
+                  }}
+                >
+                  Close
+                </Button>
+                <Button
+                  onClick={() => {
+                    setViewDialogOpen(false);
+                    if (viewingMember) handleEdit(viewingMember);
+                  }}
+                >
+                  Edit
+                </Button>
+              </div>
+            </div>
+          ) : null}
         </DialogContent>
       </Dialog>
     </div>

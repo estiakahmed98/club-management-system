@@ -47,7 +47,11 @@ export default function LoginPage() {
       if (data.user.role === "admin") {
         router.push("/admin/dashboard");
       } else {
-        router.push("/member/dashboard");
+        const next =
+          typeof window === "undefined"
+            ? null
+            : new URLSearchParams(window.location.search).get("next");
+        router.push(next || "/member/dashboard");
       }
     } catch (err) {
       setError("একটি ত্রুটি ঘটেছে। আবার চেষ্টা করুন।");
