@@ -136,59 +136,74 @@ export default function MemberMarquee() {
 
       {/* Member Details Modal */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-  <DialogContent className="w-[94vw] max-w-4xl max-h-[90dvh] overflow-y-auto border-0 bg-[#111633] p-0 text-white rounded-2xl sm:rounded-3xl">
-    {selectedMember && (
-      <div className="grid grid-cols-1 md:grid-cols-[45%_55%]">
-        {/* Image */}
-        <div className="relative bg-linear-to-b from-[#1b2250] to-[#0b1028] p-4 md:p-6">
-          <div className="absolute left-4 top-4 z-10 rounded-full bg-white/10 px-3 py-1 text-sm font-bold">
-            #{selectedMember.jerseyNumber || "N/A"}
-          </div>
+        <DialogContent className="w-[94vw] max-w-4xl max-h-[90dvh] overflow-y-auto border-0 bg-[#111633] p-0 text-white rounded-2xl sm:rounded-3xl">
+          {selectedMember && (
+            <div className="grid grid-cols-1 md:grid-cols-[45%_55%]">
+              {/* Image */}
+              <div className="relative bg-linear-to-b from-[#1b2250] to-[#0b1028] p-4 md:p-6">
+                <div className="absolute left-4 top-4 z-10 rounded-full bg-white/10 px-3 py-1 text-sm font-bold">
+                  #{selectedMember.jerseyNumber || "N/A"}
+                </div>
 
-          <div className="mx-auto flex h-[260px] max-w-[320px] items-end justify-center md:h-[520px]">
-            <img
-              src={selectedMember.imageUrl || "/default-player.png"}
-              alt={selectedMember.name}
-              className="h-full w-full rounded-xl object-cover md:object-contain"
-            />
-          </div>
-        </div>
+                <div className="mx-auto flex h-[260px] max-w-[320px] items-end justify-center md:h-[520px]">
+                  <img
+                    src={selectedMember.imageUrl || "/default-player.png"}
+                    alt={selectedMember.name}
+                    className="h-full w-full rounded-xl object-cover md:object-contain"
+                  />
+                </div>
+              </div>
 
-        {/* Details */}
-        <div className="p-5 md:p-8">
-          <DialogHeader>
-            <DialogTitle className="text-3xl font-bold leading-tight">
-              {selectedMember.name}
-            </DialogTitle>
-          </DialogHeader>
+              {/* Details */}
+              <div className="p-5 md:p-8">
+                <DialogHeader>
+                  <DialogTitle className="text-3xl font-bold leading-tight">
+                    {selectedMember.name}
+                  </DialogTitle>
+                </DialogHeader>
 
-          <Badge className="mt-3 bg-[#c9a227] text-[#0a2e1a] hover:bg-[#c9a227]">
-            {selectedMember.teamCategory || "Member"}
-          </Badge>
+                <Badge className="mt-3 bg-[#c9a227] text-[#0a2e1a] hover:bg-[#c9a227]">
+                  {selectedMember.teamCategory || "Member"}
+                </Badge>
 
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <InfoBox label="Phone" value={selectedMember.phone} />
-            <InfoBox label="Email" value={selectedMember.email} />
-            <InfoBox label="Blood Group" value={selectedMember.bloodGroup} />
-            <InfoBox label="Jersey Size" value={selectedMember.jerseySize} />
-            <InfoBox label="Football" value={selectedMember.footballPosition} />
-            <InfoBox label="Cricket" value={selectedMember.cricketRole} />
-            <InfoBox label="Joined" value={formatDate(selectedMember.joiningDate)} />
-            <InfoBox label="Jersey No" value={selectedMember.jerseyNumber} />
-          </div>
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                  <InfoBox label="Phone" value={selectedMember.phone} />
+                  <InfoBox label="Email" value={selectedMember.email} />
+                  <InfoBox
+                    label="Blood Group"
+                    value={selectedMember.bloodGroup}
+                  />
+                  <InfoBox
+                    label="Jersey Size"
+                    value={selectedMember.jerseySize}
+                  />
+                  <InfoBox
+                    label="Football"
+                    value={selectedMember.footballPosition}
+                  />
+                  <InfoBox label="Cricket" value={selectedMember.cricketRole} />
+                  <InfoBox
+                    label="Joined"
+                    value={formatDate(selectedMember.joiningDate)}
+                  />
+                  <InfoBox
+                    label="Jersey No"
+                    value={selectedMember.jerseyNumber}
+                  />
+                </div>
 
-          {selectedMember.address && (
-            <InfoWide label="Address" value={selectedMember.address} />
+                {selectedMember.address && (
+                  <InfoWide label="Address" value={selectedMember.address} />
+                )}
+
+                {selectedMember.bio && (
+                  <InfoWide label="Bio" value={selectedMember.bio} />
+                )}
+              </div>
+            </div>
           )}
-
-          {selectedMember.bio && (
-            <InfoWide label="Bio" value={selectedMember.bio} />
-          )}
-        </div>
-      </div>
-    )}
-  </DialogContent>
-</Dialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
@@ -210,13 +225,7 @@ function InfoBox({
   );
 }
 
-function InfoWide({
-  label,
-  value,
-}: {
-  label: string;
-  value?: string | null;
-}) {
+function InfoWide({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="mt-3 rounded-2xl bg-white/10 p-4">
       <p className="text-xs text-white/50">{label}</p>

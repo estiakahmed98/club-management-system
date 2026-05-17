@@ -54,8 +54,18 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, opponent, matchDate, location, matchType, result, score } =
-      await req.json();
+    const {
+      name,
+      opponent,
+      matchDate,
+      location,
+      matchType,
+      result,
+      score,
+      homeTeamCategory,
+      awayTeamCategory,
+      autoAddParticipants,
+    } = await req.json();
 
     if (!name || !opponent || !matchDate) {
       return NextResponse.json(
@@ -75,6 +85,30 @@ export async function POST(req: NextRequest) {
         score: score || null,
       },
     });
+
+    if (matchType === "senior_junior" && autoAddParticipants) {
+      const categories = [homeTeamCategory, awayTeamCategory].filter(Boolean);
+
+      const profiles = await prisma.memberProfile.findMany({
+        where: {
+          teamCategory: {
+            in: categories.length ? categories : ["SENIOR", "JUNIOR"],
+          },
+        },
+        select: { id: true },
+      });
+
+      if (profiles.length) {
+        await prisma.participant.createMany({
+          data: profiles.map((p) => ({
+            profileId: p.id,
+            matchId: match.id,
+            status: "joined",
+          })),
+          skipDuplicates: true,
+        });
+      }
+    }
 
     return NextResponse.json({ success: true, match }, { status: 201 });
   } catch (error) {

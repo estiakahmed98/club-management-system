@@ -7,7 +7,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "আউলাই মোহনপুর ক্লাব",
+  title: "Aulai Mohanpur FFF Club",
   description: "Created by Estiak Ahmed",
   icons: {
     icon: [

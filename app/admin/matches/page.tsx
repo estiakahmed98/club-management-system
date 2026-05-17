@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
@@ -54,11 +55,23 @@ interface PaginationData {
 }
 
 const matchTypes = [
-  { value: "friendly", label: "Friendly", color: "bg-green-100 text-green-800" },
+  {
+    value: "friendly",
+    label: "Friendly",
+    color: "bg-green-100 text-green-800",
+  },
   { value: "league", label: "League", color: "bg-blue-100 text-blue-800" },
-  { value: "tournament", label: "Tournament", color: "bg-purple-100 text-purple-800" },
+  {
+    value: "tournament",
+    label: "Tournament",
+    color: "bg-purple-100 text-purple-800",
+  },
   { value: "cup", label: "Cup", color: "bg-yellow-100 text-yellow-800" },
-  { value: "senior_junior", label: "Senior vs Junior", color: "bg-orange-100 text-orange-800" },
+  {
+    value: "senior_junior",
+    label: "Senior vs Junior",
+    color: "bg-orange-100 text-orange-800",
+  },
   { value: "other", label: "Other", color: "bg-gray-100 text-gray-800" },
 ];
 
@@ -67,6 +80,12 @@ const results = [
   { value: "loss", label: "Loss", color: "bg-red-100 text-red-800" },
   { value: "draw", label: "Draw", color: "bg-yellow-100 text-yellow-800" },
 ];
+
+const teamCategoryLabel: Record<string, string> = {
+  SENIOR: "Senior",
+  JUNIOR: "Junior",
+  GUEST: "Guest",
+};
 
 export default function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -91,16 +110,45 @@ export default function MatchesPage() {
     matchType: "friendly",
     result: "",
     score: "",
+    homeTeamCategory: "SENIOR",
+    awayTeamCategory: "JUNIOR",
+    autoAddParticipants: false,
   });
+
+  const computeInternalDefaults = (homeCat: string, awayCat: string) => {
+    const homeLabel = teamCategoryLabel[homeCat] || "Senior";
+    const awayLabel = teamCategoryLabel[awayCat] || "Junior";
+    return {
+      name: `${homeLabel} vs ${awayLabel}`,
+      opponent: `${awayLabel} Team`,
+    };
+  };
 
   // Auto-setup for internal Senior vs Junior match
   useEffect(() => {
     if (formData.matchType !== "senior_junior") return;
 
+    const defaults = computeInternalDefaults(
+      formData.homeTeamCategory,
+      formData.awayTeamCategory,
+    );
+
     setFormData((prev) => ({
       ...prev,
-      name: prev.name || "Senior vs Junior",
-      opponent: prev.opponent || "Junior Team",
+      name:
+        !prev.name ||
+        prev.name === "Senior vs Junior" ||
+        prev.name === "Senior vs Junior Team" ||
+        prev.name === "Senior vs Junior (Internal)"
+          ? defaults.name
+          : prev.name,
+      opponent:
+        !prev.opponent ||
+        prev.opponent === "Junior Team" ||
+        prev.opponent === "Senior Team" ||
+        prev.opponent === "Guest Team"
+          ? defaults.opponent
+          : prev.opponent,
     }));
   }, [formData.matchType]);
 
@@ -126,14 +174,15 @@ export default function MatchesPage() {
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
       });
-      
+
       if (debouncedSearch) params.append("search", debouncedSearch);
-      if (matchTypeFilter !== "all") params.append("matchType", matchTypeFilter);
+      if (matchTypeFilter !== "all")
+        params.append("matchType", matchTypeFilter);
       if (resultFilter !== "all") params.append("result", resultFilter);
 
       const response = await fetch(`/api/admin/matches?${params}`);
       if (!response.ok) throw new Error("Failed to fetch matches");
-      
+
       const data = await response.json();
       setMatches(data.matches);
       setPagination(data.pagination);
@@ -147,7 +196,13 @@ export default function MatchesPage() {
     } finally {
       setLoading(false);
     }
-  }, [pagination.page, pagination.limit, debouncedSearch, matchTypeFilter, resultFilter]);
+  }, [
+    pagination.page,
+    pagination.limit,
+    debouncedSearch,
+    matchTypeFilter,
+    resultFilter,
+  ]);
 
   useEffect(() => {
     fetchMatches();
@@ -161,12 +216,12 @@ export default function MatchesPage() {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete match");
-      
+
       toast({
         title: "Success",
         description: "Match deleted successfully",
       });
-      
+
       fetchMatches();
     } catch (err) {
       console.error(err);
@@ -188,6 +243,9 @@ export default function MatchesPage() {
       matchType: match.matchType,
       result: match.result || "",
       score: match.score || "",
+      homeTeamCategory: "SENIOR",
+      awayTeamCategory: "JUNIOR",
+      autoAddParticipants: false,
     });
     setDialogOpen(true);
   };
@@ -236,13 +294,17 @@ export default function MatchesPage() {
         matchType: "friendly",
         result: "",
         score: "",
+        homeTeamCategory: "SENIOR",
+        awayTeamCategory: "JUNIOR",
+        autoAddParticipants: false,
       });
       fetchMatches();
     } catch (err) {
       console.error(err);
       toast({
         title: "Error",
-        description: err instanceof Error ? err.message : "Failed to save match",
+        description:
+          err instanceof Error ? err.message : "Failed to save match",
         variant: "destructive",
       });
     }
@@ -259,24 +321,24 @@ export default function MatchesPage() {
   };
 
   const getMatchTypeColor = (type: string) => {
-    const matchType = matchTypes.find(mt => mt.value === type);
+    const matchType = matchTypes.find((mt) => mt.value === type);
     return matchType?.color || "bg-gray-100 text-gray-800";
   };
 
   const getMatchTypeLabel = (type: string) => {
-    const matchType = matchTypes.find(mt => mt.value === type);
+    const matchType = matchTypes.find((mt) => mt.value === type);
     return matchType?.label || type;
   };
 
   const getResultColor = (result?: string) => {
     if (!result) return "bg-gray-100 text-gray-800";
-    const resultType = results.find(r => r.value === result);
+    const resultType = results.find((r) => r.value === result);
     return resultType?.color || "bg-gray-100 text-gray-800";
   };
 
   const getResultLabel = (result?: string) => {
     if (!result) return "Not Played";
-    const resultType = results.find(r => r.value === result);
+    const resultType = results.find((r) => r.value === result);
     return resultType?.label || result;
   };
 
@@ -289,8 +351,8 @@ export default function MatchesPage() {
   };
 
   const getWinRate = () => {
-    const playedMatches = matches.filter(m => m.result);
-    const wins = matches.filter(m => m.result === "win").length;
+    const playedMatches = matches.filter((m) => m.result);
+    const wins = matches.filter((m) => m.result === "win").length;
     if (playedMatches.length === 0) return 0;
     return Math.round((wins / playedMatches.length) * 100);
   };
@@ -318,6 +380,9 @@ export default function MatchesPage() {
               matchType: "friendly",
               result: "",
               score: "",
+              homeTeamCategory: "SENIOR",
+              awayTeamCategory: "JUNIOR",
+              autoAddParticipants: false,
             });
             setDialogOpen(true);
           }}
@@ -353,7 +418,7 @@ export default function MatchesPage() {
                   Wins
                 </p>
                 <p className="text-2xl font-bold text-green-900 dark:text-green-100">
-                  {matches.filter(m => m.result === "win").length}
+                  {matches.filter((m) => m.result === "win").length}
                 </p>
               </div>
               <Trophy className="w-8 h-8 text-green-500" />
@@ -364,11 +429,9 @@ export default function MatchesPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-red-600 dark:text-red-400">
-                  Losses
-                </p>
+                <p className="text-sm text-red-600 dark:text-red-400">Losses</p>
                 <p className="text-2xl font-bold text-red-900 dark:text-red-100">
-                  {matches.filter(m => m.result === "loss").length}
+                  {matches.filter((m) => m.result === "loss").length}
                 </p>
               </div>
               <Trophy className="w-8 h-8 text-red-500" />
@@ -383,7 +446,7 @@ export default function MatchesPage() {
                   Draws
                 </p>
                 <p className="text-2xl font-bold text-yellow-900 dark:text-yellow-100">
-                  {matches.filter(m => m.result === "draw").length}
+                  {matches.filter((m) => m.result === "draw").length}
                 </p>
               </div>
               <Users className="w-8 h-8 text-yellow-500" />
@@ -446,8 +509,14 @@ export default function MatchesPage() {
                 ))}
               </SelectContent>
             </Select>
-            {(searchTerm || matchTypeFilter !== "all" || resultFilter !== "all") && (
-              <Button variant="outline" onClick={clearFilters} className="gap-2">
+            {(searchTerm ||
+              matchTypeFilter !== "all" ||
+              resultFilter !== "all") && (
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="gap-2"
+              >
                 <X className="w-4 h-4" />
                 Clear Filters
               </Button>
@@ -473,7 +542,9 @@ export default function MatchesPage() {
             <div className="text-center py-12">
               <Trophy className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">No matches found</p>
-              {(searchTerm || matchTypeFilter !== "all" || resultFilter !== "all") && (
+              {(searchTerm ||
+                matchTypeFilter !== "all" ||
+                resultFilter !== "all") && (
                 <Button variant="link" onClick={clearFilters} className="mt-2">
                   Clear filters
                 </Button>
@@ -485,13 +556,27 @@ export default function MatchesPage() {
                 <table className="w-full">
                   <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                      <th className="px-6 py-3 text-left text-sm font-semibold">Match</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold">Opponent</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold">Location</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold">Type</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold">Result</th>
-                      <th className="px-6 py-3 text-center text-sm font-semibold">Actions</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Match
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Opponent
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Date
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Location
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Type
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold">
+                        Result
+                      </th>
+                      <th className="px-6 py-3 text-center text-sm font-semibold">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y dark:divide-gray-700">
@@ -545,7 +630,9 @@ export default function MatchesPage() {
                               )}
                             </div>
                           ) : (
-                            <span className="text-gray-400 text-sm">Not Played</span>
+                            <span className="text-gray-400 text-sm">
+                              Not Played
+                            </span>
                           )}
                         </td>
                         <td className="px-6 py-4">
@@ -579,7 +666,10 @@ export default function MatchesPage() {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t">
                   <p className="text-sm text-gray-500">
                     Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-                    {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+                    {Math.min(
+                      pagination.page * pagination.limit,
+                      pagination.total,
+                    )}{" "}
                     of {pagination.total} matches
                   </p>
                   <div className="flex items-center space-x-2">
@@ -592,29 +682,39 @@ export default function MatchesPage() {
                       <ChevronLeft className="w-4 h-4" />
                     </Button>
                     <div className="flex items-center space-x-1">
-                      {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                        let pageNum;
-                        if (pagination.totalPages <= 5) {
-                          pageNum = i + 1;
-                        } else if (pagination.page <= 3) {
-                          pageNum = i + 1;
-                        } else if (pagination.page >= pagination.totalPages - 2) {
-                          pageNum = pagination.totalPages - 4 + i;
-                        } else {
-                          pageNum = pagination.page - 2 + i;
-                        }
-                        return (
-                          <Button
-                            key={pageNum}
-                            variant={pagination.page === pageNum ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => handlePageChange(pageNum)}
-                            className="w-8 h-8"
-                          >
-                            {pageNum}
-                          </Button>
-                        );
-                      })}
+                      {Array.from(
+                        { length: Math.min(5, pagination.totalPages) },
+                        (_, i) => {
+                          let pageNum;
+                          if (pagination.totalPages <= 5) {
+                            pageNum = i + 1;
+                          } else if (pagination.page <= 3) {
+                            pageNum = i + 1;
+                          } else if (
+                            pagination.page >=
+                            pagination.totalPages - 2
+                          ) {
+                            pageNum = pagination.totalPages - 4 + i;
+                          } else {
+                            pageNum = pagination.page - 2 + i;
+                          }
+                          return (
+                            <Button
+                              key={pageNum}
+                              variant={
+                                pagination.page === pageNum
+                                  ? "default"
+                                  : "outline"
+                              }
+                              size="sm"
+                              onClick={() => handlePageChange(pageNum)}
+                              className="w-8 h-8"
+                            >
+                              {pageNum}
+                            </Button>
+                          );
+                        },
+                      )}
                     </div>
                     <Button
                       variant="outline"
@@ -639,15 +739,42 @@ export default function MatchesPage() {
             <DialogTitle>
               {editingId ? "Edit Match" : "Schedule New Match"}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Create or edit a match and save it to the system.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Match Type
+              </label>
+              <Select
+                value={formData.matchType}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, matchType: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select match type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {matchTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <label className="text-sm font-medium mb-1 block">
                 Match Name <span className="text-red-500">*</span>
               </label>
               <Input
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="e.g., Premier League Final"
               />
             </div>
@@ -657,7 +784,9 @@ export default function MatchesPage() {
               </label>
               <Input
                 value={formData.opponent}
-                onChange={(e) => setFormData({ ...formData, opponent: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, opponent: e.target.value })
+                }
                 placeholder="Opponent team name"
                 disabled={formData.matchType === "senior_junior"}
               />
@@ -674,67 +803,196 @@ export default function MatchesPage() {
               <Input
                 type="date"
                 value={formData.matchDate}
-                onChange={(e) => setFormData({ ...formData, matchDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, matchDate: e.target.value })
+                }
               />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Location</label>
               <Input
                 value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
                 placeholder="Stadium/Venue name"
               />
             </div>
-            <div>
-              <label className="text-sm font-medium mb-1 block">Match Type</label>
-              <Select
-                value={formData.matchType}
-                onValueChange={(value) => setFormData({ ...formData, matchType: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select match type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {matchTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+
+            <div className="grid grid-cols-2">
+              <div>
+                <label className="text-sm font-medium mb-1 block">Result</label>
+                <Select
+                  value={formData.result || "none"}
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      result: value === "none" ? "" : value,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select result" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Not Played</SelectItem>
+                    {results.map((result) => (
+                      <SelectItem key={result.value} value={result.value}>
+                        {result.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">Score</label>
+                <Input
+                  value={formData.score}
+                  onChange={(e) =>
+                    setFormData({ ...formData, score: e.target.value })
+                  }
+                  placeholder={
+                    formData.matchType === "senior_junior"
+                      ? "e.g., Senior-Junior (3-2)"
+                      : "e.g., 3-2"
+                  }
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {formData.matchType === "senior_junior"
+                    ? "Format: Senior Score - Junior Score"
+                    : "Format: Home Score - Away Score"}
+                </p>
+              </div>
             </div>
-            <div>
-              <label className="text-sm font-medium mb-1 block">Result</label>
-              <Select
-                value={formData.result || "none"}
-                onValueChange={(value) => setFormData({ ...formData, result: value === "none" ? "" : value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select result" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Not Played</SelectItem>
-                  {results.map((result) => (
-                    <SelectItem key={result.value} value={result.value}>
-                      {result.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-sm font-medium mb-1 block">Score</label>
-              <Input
-                value={formData.score}
-                onChange={(e) => setFormData({ ...formData, score: e.target.value })}
-                placeholder={formData.matchType === "senior_junior" ? "e.g., Senior-Junior (3-2)" : "e.g., 3-2"}
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {formData.matchType === "senior_junior"
-                  ? "Format: Senior Score - Junior Score"
-                  : "Format: Home Score - Away Score"}
-              </p>
-            </div>
+
+            {formData.matchType === "senior_junior" && (
+              <div className="rounded-xl border p-4 space-y-4">
+                <div className="text-sm font-medium">Internal Teams</div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">
+                      Team A Category
+                    </label>
+                    <Select
+                      value={formData.homeTeamCategory}
+                      onValueChange={(value) =>
+                        setFormData((prev) => {
+                          const next = { ...prev, homeTeamCategory: value };
+                          if (next.matchType !== "senior_junior") return next;
+
+                          const defaults = computeInternalDefaults(
+                            value,
+                            next.awayTeamCategory,
+                          );
+
+                          const nameIsDefault =
+                            !next.name ||
+                            next.name.includes(" vs ") ||
+                            next.name === "Senior vs Junior" ||
+                            next.name === "Senior vs Junior (Internal)";
+
+                          const opponentIsDefault =
+                            !next.opponent ||
+                            next.opponent === "Junior Team" ||
+                            next.opponent === "Senior Team" ||
+                            next.opponent === "Guest Team";
+
+                          return {
+                            ...next,
+                            ...(nameIsDefault ? { name: defaults.name } : {}),
+                            ...(opponentIsDefault
+                              ? { opponent: defaults.opponent }
+                              : {}),
+                          };
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="SENIOR">Senior</SelectItem>
+                        <SelectItem value="JUNIOR">Junior</SelectItem>
+                        <SelectItem value="GUEST">Guest</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">
+                      Team B Category
+                    </label>
+                    <Select
+                      value={formData.awayTeamCategory}
+                      onValueChange={(value) =>
+                        setFormData((prev) => {
+                          const next = { ...prev, awayTeamCategory: value };
+                          if (next.matchType !== "senior_junior") return next;
+
+                          const defaults = computeInternalDefaults(
+                            next.homeTeamCategory,
+                            value,
+                          );
+
+                          const nameIsDefault =
+                            !next.name ||
+                            next.name.includes(" vs ") ||
+                            next.name === "Senior vs Junior" ||
+                            next.name === "Senior vs Junior (Internal)";
+
+                          const opponentIsDefault =
+                            !next.opponent ||
+                            next.opponent === "Junior Team" ||
+                            next.opponent === "Senior Team" ||
+                            next.opponent === "Guest Team";
+
+                          return {
+                            ...next,
+                            ...(nameIsDefault ? { name: defaults.name } : {}),
+                            ...(opponentIsDefault
+                              ? { opponent: defaults.opponent }
+                              : {}),
+                          };
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="JUNIOR">Junior</SelectItem>
+                        <SelectItem value="SENIOR">Senior</SelectItem>
+                        <SelectItem value="GUEST">Guest</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <label className="flex items-start gap-3 rounded-lg border p-3 cursor-pointer hover:bg-muted/30">
+                  <input
+                    type="checkbox"
+                    checked={formData.autoAddParticipants}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        autoAddParticipants: e.target.checked,
+                      })
+                    }
+                    className="mt-1 h-4 w-4 rounded"
+                  />
+                  <div className="space-y-1">
+                    <div className="text-sm font-medium">
+                      Auto-add participants
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Adds all members from both categories to this match as
+                      participants.
+                    </div>
+                  </div>
+                </label>
+              </div>
+            )}
             <Button onClick={handleSave} className="w-full">
               {editingId ? "Update Match" : "Schedule Match"}
             </Button>

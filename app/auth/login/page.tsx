@@ -168,27 +168,6 @@ export default function LoginPage() {
               Register here
             </Link>
           </div>
-
-          {/* Demo credentials বক্সটিকেও গ্লাস লুক দেওয়া হয়েছে */}
-          <div className="mt-6 p-3.5 bg-blue-50/40 dark:bg-blue-950/20 border border-white/30 dark:border-blue-900/30 rounded-xl text-xs backdrop-blur-sm">
-            <p className="font-bold text-blue-900 dark:text-blue-300 mb-1.5 uppercase tracking-wider text-[10px]">
-              Demo Credentials:
-            </p>
-            <div className="space-y-0.5 text-zinc-800 dark:text-zinc-300">
-              <p>
-                <span className="font-semibold text-blue-900 dark:text-blue-400">
-                  Email:
-                </span>{" "}
-                admin@fff.local
-              </p>
-              <p>
-                <span className="font-semibold text-blue-900 dark:text-blue-400">
-                  Password:
-                </span>{" "}
-                admin12345
-              </p>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </main>

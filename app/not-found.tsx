@@ -35,7 +35,7 @@ export default function NotFound() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a2e1a] via-[#134d2e] to-[#0a2e1a] overflow-hidden relative flex items-center justify-center">
+    <div className="min-h-screen bg-linear-to-br from-[#0a2e1a] via-[#134d2e] to-[#0a2e1a] overflow-hidden relative flex items-center justify-center">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Floating shapes */}
@@ -50,8 +50,8 @@ export default function NotFound() {
         </div>
         
         {/* Animated lines */}
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#c9a227]/30 to-transparent animate-slide-right" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#c9a227]/30 to-transparent animate-slide-left" />
+        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-[#c9a227]/30 to-transparent animate-slide-right" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-[#c9a227]/30 to-transparent animate-slide-left" />
       </div>
 
       {/* Main Content */}
@@ -115,7 +115,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Link href="/">
             <button className="group relative inline-flex items-center gap-2 px-8 py-3 bg-[#c9a227] text-[#0a2e1a] font-bold rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[#c9a227]/30">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f0c94a] to-[#c9a227] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-linear-to-r from-[#f0c94a] to-[#c9a227] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <Home className="w-5 h-5 relative z-10" />
               <span className="relative z-10">Back to Home</span>
             </button>
