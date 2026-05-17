@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image"; // Next.js Image component import করা হয়েছে
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -34,7 +35,7 @@ export default function LoginPage() {
 
       if (!response.ok) {
         const data = await response.json();
-        setError(data.error || "লগইন ব্যর্থ হয়েছে");
+        setError(data.error || "Login failed");
         return;
       }
 
@@ -54,72 +55,139 @@ export default function LoginPage() {
         router.push(next || "/member/dashboard");
       }
     } catch (err) {
-      setError("একটি ত্রুটি ঘটেছে। আবার চেষ্টা করুন।");
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-background px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl">ক্লাব ম্যানেজমেন্ট সিস্টেম</CardTitle>
-          <CardDescription>আপনার অ্যাকাউন্টে লগইন করুন</CardDescription>
+    <main
+      className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat px-4 relative"
+      style={{ backgroundImage: "url('/loginimage.png')" }}
+    >
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"></div>
+
+      <Card className="w-full max-w-md z-10 backdrop-blur-lg bg-white/25 dark:bg-black/35 shadow-2xl border-white/20 dark:border-zinc-800/40 transition-all duration-300">
+        <CardHeader className="space-y-3 text-center pt-8">
+          <div className="flex justify-center mb-1">
+            {/* Logo container কেও সামান্য ট্রান্সপারেন্ট করা হয়েছে */}
+            <div className="relative w-20 h-20 rounded-full bg-white/80 dark:bg-zinc-900/80 p-2 shadow-md flex items-center justify-center border border-white/40 dark:border-zinc-700/50">
+              <Image
+                src="/amfff.png"
+                alt="FFF Club Logo"
+                width={70}
+                height={70}
+                className="object-cover"
+                priority
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const fallback = e.currentTarget.nextSibling as HTMLElement;
+                  if (fallback) fallback.style.display = "flex";
+                }}
+              />
+              <div className="hidden absolute inset-0 items-center justify-center font-bold text-xl text-primary bg-primary/10 rounded-full">
+                FFF
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <CardTitle className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Awlai Mohonpur
+            </CardTitle>
+            <p className="text-sm font-semibold text-primary tracking-wide uppercase">
+              Friend For Future Club
+            </p>
+            {/* টেক্সটের কালার একটু ব্রাইট করা হয়েছে ট্রান্সপারেন্ট ব্যাকগ্রাউন্ডে ভালো দেখানোর জন্য */}
+            <CardDescription className="text-zinc-700 dark:text-zinc-300 pt-1">
+              Sign in to your account to continue
+            </CardDescription>
+          </div>
         </CardHeader>
+
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-800 text-sm">
+              <div className="p-3 bg-red-50/90 dark:bg-red-950/50 border border-red-200 dark:border-red-900 rounded-md text-red-800 dark:text-red-200 text-sm font-medium">
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                ইমেইল
+              <label
+                htmlFor="email"
+                className="text-sm font-semibold text-zinc-800 dark:text-zinc-200"
+              >
+                Email Address
               </label>
               <Input
                 id="email"
                 type="email"
-                placeholder="আপনার ইমেইল"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="bg-white/40 dark:bg-zinc-950/40 border-white/30 dark:border-zinc-800/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-2 backdrop-blur-sm"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                পাসওয়ার্ড
+              <label
+                htmlFor="password"
+                className="text-sm font-semibold text-zinc-800 dark:text-zinc-200"
+              >
+                Password
               </label>
               <Input
                 id="password"
                 type="password"
-                placeholder="আপনার পাসওয়ার্ড"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-white/40 dark:bg-zinc-950/40 border-white/30 dark:border-zinc-800/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-2 backdrop-blur-sm"
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "লগইন হচ্ছে..." : "লগইন করুন"}
+            <Button
+              type="submit"
+              className="w-full py-6 text-base font-medium shadow-lg hover:shadow-xl transition-all"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
-          <div className="mt-4 text-center text-sm">
-            অ্যাকাউন্ট নেই?{" "}
-            <Link href="/auth/signup" className="text-primary hover:underline">
-              এখানে নিবন্ধন করুন
+          <div className="mt-6 text-center text-sm text-zinc-800 dark:text-zinc-300">
+            Don't have an account?{" "}
+            <Link
+              href="/auth/signup"
+              className="text-primary font-bold hover:underline"
+            >
+              Register here
             </Link>
           </div>
 
-          {/* Demo credentials */}
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md text-xs">
-            <p className="font-semibold text-blue-900 mb-1">ডেমো সংগ্রহস্থল:</p>
-            <p className="text-blue-800">ইমেইল: admin@fff.local</p>
-            <p className="text-blue-800">পাসওয়ার্ড: admin12345</p>
+          {/* Demo credentials বক্সটিকেও গ্লাস লুক দেওয়া হয়েছে */}
+          <div className="mt-6 p-3.5 bg-blue-50/40 dark:bg-blue-950/20 border border-white/30 dark:border-blue-900/30 rounded-xl text-xs backdrop-blur-sm">
+            <p className="font-bold text-blue-900 dark:text-blue-300 mb-1.5 uppercase tracking-wider text-[10px]">
+              Demo Credentials:
+            </p>
+            <div className="space-y-0.5 text-zinc-800 dark:text-zinc-300">
+              <p>
+                <span className="font-semibold text-blue-900 dark:text-blue-400">
+                  Email:
+                </span>{" "}
+                admin@fff.local
+              </p>
+              <p>
+                <span className="font-semibold text-blue-900 dark:text-blue-400">
+                  Password:
+                </span>{" "}
+                admin12345
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>

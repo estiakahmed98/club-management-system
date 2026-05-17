@@ -79,7 +79,7 @@ export default function MemberEventsPage() {
   }
 
   return (
-    <div>
+    <div className="p-8">
       <h1 className="text-3xl font-bold mb-8">ইভেন্ট এবং কার্যক্রম</h1>
 
       {error && (

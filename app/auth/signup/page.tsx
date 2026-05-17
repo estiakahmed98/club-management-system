@@ -7,7 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -83,14 +89,16 @@ export default function SignupPage() {
       }
 
       const fileUrl = data?.fileUrl as string | undefined;
-      if (!fileUrl) throw new Error("Upload succeeded but no file URL returned");
+      if (!fileUrl)
+        throw new Error("Upload succeeded but no file URL returned");
 
       setFormData((prev) => ({ ...prev, imageUrl: fileUrl }));
       toast({ title: "Uploaded", description: "Photo uploaded successfully" });
     } catch (error) {
       toast({
         title: "Upload Error",
-        description: error instanceof Error ? error.message : "Failed to upload image",
+        description:
+          error instanceof Error ? error.message : "Failed to upload image",
         variant: "destructive",
       });
     } finally {
@@ -111,7 +119,9 @@ export default function SignupPage() {
     }
 
     const rating =
-      formData.rating === "" || formData.rating === null || formData.rating === undefined
+      formData.rating === "" ||
+      formData.rating === null ||
+      formData.rating === undefined
         ? undefined
         : Number(formData.rating);
     if (rating !== undefined && !Number.isFinite(rating)) {
@@ -159,7 +169,8 @@ export default function SignupPage() {
     } catch (error) {
       toast({
         title: "Signup failed",
-        description: error instanceof Error ? error.message : "Please try again.",
+        description:
+          error instanceof Error ? error.message : "Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -176,13 +187,13 @@ export default function SignupPage() {
         }}
       />
       <div className="absolute inset-0 bg-linear-to-br from-black/70 via-black/55 to-black/70" />
-      <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-blue-500/25 blur-3xl" />
-      <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-purple-500/25 blur-3xl" />
+      <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-[#c9a227]/20 blur-3xl" />
+      <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-[#1e7a47]/25 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10">
         <div className="grid gap-6 lg:grid-cols-5 items-start">
           <div className="lg:col-span-2 space-y-5 text-white">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-gray-500 bg-black/25 px-3 py-1 text-sm">
               <Shield className="h-4 w-4" />
               Member onboarding
             </div>
@@ -190,40 +201,61 @@ export default function SignupPage() {
               Create your member account
             </h1>
             <p className="text-white/80 leading-relaxed">
-              Fill in your profile details now so your dashboard is ready from day one.
-              After signup, log in and you’ll be routed to your member dashboard.
+              Fill in your profile details now so your dashboard is ready from
+              day one. After signup, log in and you’ll be routed to your member
+              dashboard.
             </p>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <div className="flex items-center gap-2 text-sm text-white/80">
-                  <User className="h-4 w-4" />
-                  Profile details
-                </div>
-                <div className="mt-2 text-xs text-white/60">
-                  Contact, jersey, address, bio
-                </div>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#134d2e]/70 to-[#0a2e1a]/70 backdrop-blur-sm border border-gray-500">
+              <div className="text-center sm:text-left">
+                <p className="text-sm text-white/85 font-medium">
+                  Already have an account?{" "}
+                  <Link
+                    href="/auth/login"
+                    className="text-[#f0c94a] font-bold hover:text-[#c9a227] transition-all duration-200 underline-offset-4 hover:underline inline-flex items-center gap-1"
+                  >
+                    Log in
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                </p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <div className="flex items-center gap-2 text-sm text-white/80">
-                  <Star className="h-4 w-4" />
-                  Sports info
-                </div>
-                <div className="mt-2 text-xs text-white/60">
-                  Football / cricket + rating
-                </div>
-              </div>
-            </div>
 
-            <div className="text-sm text-white/80">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="text-white underline underline-offset-4">
-                Log in
-              </Link>
+              <div>
+                <Link href="/">
+                  <button className="group relative inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#c9a227] to-[#f0c94a] text-[#0a2e1a] text-sm font-semibold shadow-lg shadow-black/30 hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#f0c94a] to-[#c9a227] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <svg
+                      className="w-4 h-4 relative z-10"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 12h18M12 3l9 9-9 9"
+                      />
+                    </svg>
+                    <span className="relative z-10">Go to Landing Page</span>
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
 
-          <Card className="lg:col-span-3 border-white/10 bg-white/90 dark:bg-gray-950/60 backdrop-blur supports-backdrop-filter:bg-white/70">
+          <Card className="lg:col-span-3 border-[#c9a227]/20 bg-white/25 dark:bg-black/35 backdrop-blur-lg shadow-xl transition-all duration-300">
             <CardHeader>
               <CardTitle className="flex items-center justify-between gap-2">
                 <span>Member Signup</span>
@@ -241,12 +273,14 @@ export default function SignupPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium flex items-center gap-2">
-                        <User className="h-4 w-4 text-gray-500" /> Full Name{" "}
+                        <User className="h-4 w-4 text-gray-800" /> Full Name{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <Input
                         value={formData.name}
-                        onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, name: e.target.value }))
+                        }
                         placeholder="Enter your name"
                         required
                       />
@@ -259,7 +293,9 @@ export default function SignupPage() {
                       <Input
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, email: e.target.value }))
+                        }
                         placeholder="member@example.com"
                         required
                       />
@@ -274,7 +310,10 @@ export default function SignupPage() {
                           type={showPassword ? "text" : "password"}
                           value={formData.password}
                           onChange={(e) =>
-                            setFormData((p) => ({ ...p, password: e.target.value }))
+                            setFormData((p) => ({
+                              ...p,
+                              password: e.target.value,
+                            }))
                           }
                           placeholder="Create a strong password"
                           required
@@ -301,19 +340,25 @@ export default function SignupPage() {
                       <label className="text-sm font-medium">Phone</label>
                       <Input
                         value={formData.phone}
-                        onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, phone: e.target.value }))
+                        }
                         placeholder="+880 1XXX XXXXXX"
                       />
                     </div>
-    
+
                     <div className="space-y-2">
                       <label className="text-sm font-medium flex items-center gap-2">
-                        <Droplet className="h-4 w-4 text-gray-500" /> Blood Group
+                        <Droplet className="h-4 w-4 text-gray-500" /> Blood
+                        Group
                       </label>
                       <Select
                         value={formData.bloodGroup || "none"}
                         onValueChange={(v) =>
-                          setFormData((p) => ({ ...p, bloodGroup: v === "none" ? "" : v }))
+                          setFormData((p) => ({
+                            ...p,
+                            bloodGroup: v === "none" ? "" : v,
+                          }))
                         }
                       >
                         <SelectTrigger>
@@ -337,7 +382,10 @@ export default function SignupPage() {
                       <Select
                         value={formData.jerseySize || "none"}
                         onValueChange={(v) =>
-                          setFormData((p) => ({ ...p, jerseySize: v === "none" ? "" : v }))
+                          setFormData((p) => ({
+                            ...p,
+                            jerseySize: v === "none" ? "" : v,
+                          }))
                         }
                       >
                         <SelectTrigger>
@@ -355,22 +403,32 @@ export default function SignupPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Jersey Number</label>
+                      <label className="text-sm font-medium">
+                        Jersey Number
+                      </label>
                       <Input
                         value={formData.jerseyNumber}
                         onChange={(e) =>
-                          setFormData((p) => ({ ...p, jerseyNumber: e.target.value }))
+                          setFormData((p) => ({
+                            ...p,
+                            jerseyNumber: e.target.value,
+                          }))
                         }
                         placeholder="e.g. 10"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Team Category</label>
+                      <label className="text-sm font-medium">
+                        Team Category
+                      </label>
                       <Select
                         value={formData.teamCategory}
                         onValueChange={(v) =>
-                          setFormData((p) => ({ ...p, teamCategory: v as TeamCategory }))
+                          setFormData((p) => ({
+                            ...p,
+                            teamCategory: v as TeamCategory,
+                          }))
                         }
                       >
                         <SelectTrigger>
@@ -392,7 +450,12 @@ export default function SignupPage() {
                       </label>
                       <Textarea
                         value={formData.address}
-                        onChange={(e) => setFormData((p) => ({ ...p, address: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            address: e.target.value,
+                          }))
+                        }
                         placeholder="Your current address"
                         rows={3}
                       />
@@ -402,7 +465,9 @@ export default function SignupPage() {
                       <label className="text-sm font-medium">Bio</label>
                       <Textarea
                         value={formData.bio}
-                        onChange={(e) => setFormData((p) => ({ ...p, bio: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, bio: e.target.value }))
+                        }
                         placeholder="A short bio (optional)"
                         rows={3}
                       />
@@ -410,7 +475,8 @@ export default function SignupPage() {
 
                     <div className="space-y-2 md:col-span-2">
                       <label className="text-sm font-medium flex items-center gap-2">
-                        <ImageIcon className="h-4 w-4 text-gray-500" /> Photo (optional)
+                        <ImageIcon className="h-4 w-4 text-gray-500" /> Photo
+                        (optional)
                       </label>
                       <div className="flex items-center gap-3">
                         <Input
@@ -425,7 +491,11 @@ export default function SignupPage() {
                           }}
                         />
                         <div className="text-xs text-gray-500 min-w-24 text-right">
-                          {imageUploading ? "Uploading..." : formData.imageUrl ? "Uploaded" : "No photo"}
+                          {imageUploading
+                            ? "Uploading..."
+                            : formData.imageUrl
+                              ? "Uploaded"
+                              : "No photo"}
                         </div>
                       </div>
                       {formData.imageUrl ? (
@@ -433,7 +503,9 @@ export default function SignupPage() {
                           <span className="truncate">{formData.imageUrl}</span>
                           <button
                             type="button"
-                            onClick={() => setFormData((p) => ({ ...p, imageUrl: "" }))}
+                            onClick={() =>
+                              setFormData((p) => ({ ...p, imageUrl: "" }))
+                            }
                             className="text-red-600 hover:underline"
                           >
                             Remove
@@ -454,12 +526,17 @@ export default function SignupPage() {
                         type="checkbox"
                         checked={formData.playsFootball}
                         onChange={(e) =>
-                          setFormData((p) => ({ ...p, playsFootball: e.target.checked }))
+                          setFormData((p) => ({
+                            ...p,
+                            playsFootball: e.target.checked,
+                          }))
                         }
                         className="mt-1 h-4 w-4 rounded"
                       />
                       <div className="space-y-1">
-                        <div className="text-sm font-medium">Plays Football</div>
+                        <div className="text-sm font-medium">
+                          Plays Football
+                        </div>
                         <div className="text-xs text-muted-foreground">
                           Choose your preferred position.
                         </div>
@@ -470,7 +547,10 @@ export default function SignupPage() {
                         type="checkbox"
                         checked={formData.playsCricket}
                         onChange={(e) =>
-                          setFormData((p) => ({ ...p, playsCricket: e.target.checked }))
+                          setFormData((p) => ({
+                            ...p,
+                            playsCricket: e.target.checked,
+                          }))
                         }
                         className="mt-1 h-4 w-4 rounded"
                       />
@@ -484,7 +564,9 @@ export default function SignupPage() {
 
                     {formData.playsFootball ? (
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Football Position</label>
+                        <label className="text-sm font-medium">
+                          Football Position
+                        </label>
                         <Select
                           value={formData.footballPosition || "none"}
                           onValueChange={(v) =>
@@ -511,7 +593,9 @@ export default function SignupPage() {
 
                     {formData.playsCricket ? (
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Cricket Role</label>
+                        <label className="text-sm font-medium">
+                          Cricket Role
+                        </label>
                         <Select
                           value={formData.cricketRole || "none"}
                           onValueChange={(v) =>
@@ -542,7 +626,11 @@ export default function SignupPage() {
                   <div className="text-xs text-muted-foreground">
                     By signing up you’re creating a member account.
                   </div>
-                  <Button type="submit" disabled={loading || imageUploading} className="sm:min-w-44">
+                  <Button
+                    type="submit"
+                    disabled={loading || imageUploading}
+                    className="sm:min-w-44 bg-linear-to-r from-[#c9a227] to-[#f0c94a] text-[#0a2e1a] hover:from-[#f0c94a] hover:to-[#c9a227] font-bold"
+                  >
                     {loading ? "Creating..." : "Create account"}
                   </Button>
                 </div>
@@ -554,4 +642,3 @@ export default function SignupPage() {
     </main>
   );
 }
-

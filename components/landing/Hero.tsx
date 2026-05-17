@@ -35,7 +35,7 @@ export default function Hero({ slides = DEFAULT_SLIDES }: HeroProps) {
   }, [current, goSlide]);
 
   return (
-    <section className="relative h-screen min-h-[620px] overflow-hidden flex items-start">
+    <section className="relative h-screen min-h-[620px] overflow-hidden flex items-end">
       {/* Slides */}
       {slides.map((slide, i) => (
         <div
@@ -131,13 +131,13 @@ export default function Hero({ slides = DEFAULT_SLIDES }: HeroProps) {
             </div>
           )}
 
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-linear-to-b from-black/20 via-black/10 to-[#0a2e1a]/90" />
+          {/* Overlay - darker at bottom */}
+          <div className="absolute inset-0 bg-linear-to-t from-[#0a2e1a]/95 via-[#0a2e1a]/30 to-transparent" />
         </div>
       ))}
 
-      {/* Content */}
-      <div className="relative z-10 px-6 md:px-12 pt-28 md:pt-40 w-full max-w-4xl">
+      {/* Content - Bottom Left */}
+      <div className="relative z-10 px-6 md:px-12 pb-12 md:pb-20 w-full max-w-5xl">
         <span className="inline-block bg-[#c9a227] text-[#0a2e1a] text-[10px] md:text-[11px] font-bold tracking-[3px] uppercase px-3 py-1 mb-5">
           Founded with passion • Aulai Mohonpur
         </span>
@@ -149,28 +149,20 @@ export default function Hero({ slides = DEFAULT_SLIDES }: HeroProps) {
             fontSize: "clamp(3rem, 8vw, 7rem)",
           }}
         >
-          <span className="bg-black/45 px-3 py-1 inline-block mb-2">
-            Friend
-          </span>
+          Friend
           <br />
-
-          <span className="bg-black/45 px-3 py-1 inline-block mb-2">
-            For <span className="text-[#c9a227]">Future</span>
-          </span>
+          For <span className="text-[#c9a227]">Future</span>
           <br />
-
-          <span className="bg-black/45 px-3 py-1 inline-block">Club</span>
+          Club
         </h1>
 
         <p className="text-[#d5e3cf] text-xs md:text-sm tracking-[3px] md:tracking-[4px] uppercase mb-8">
-          <span className="bg-black/45 px-4 py-2 inline-block">
-            Aulai Mohonpur · Unity · Spirit · Excellence
-          </span>
+          Aulai Mohonpur · Unity · Spirit · Excellence
         </p>
 
         <a
           href="#about"
-          className="inline-flex items-center gap-2 bg-[#c9a227] text-[#0a2e1a] px-6 md:px-8 py-3 md:py-4 text-[12px] md:text-[13px] font-bold tracking-[2px] uppercase no-underline transition-all duration-200 hover:bg-[#f0c94a] hover:-translate-y-1"
+          className="inline-flex items-center gap-2 bg-[#c9a227] text-[#0a2e1a] px-6 md:px-8 py-3 md:py-4 text-[12px] md:text-[13px] font-bold tracking-[2px] uppercase no-underline transition-all duration-200 hover:bg-[#f0c94a] hover:-translate-y-1 hover:shadow-2xl"
           style={{
             clipPath:
               "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",

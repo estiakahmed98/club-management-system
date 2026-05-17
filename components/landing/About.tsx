@@ -1,78 +1,63 @@
 import SectionHeader from "./SectionHeader";
+import Image from "next/image";
 
 export default function About() {
   return (
-    <section id="about" className="bg-[#0a2e1a] py-24 px-6 md:px-10">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 items-center">
-        {/* Text */}
-        <div>
-          <SectionHeader tag="Our Story" title={"Unity, Passion\n& Future"} />
-          <div className="space-y-4 mt-2" style={{ fontFamily: "'Tiro Bangla', serif" }}>
-            <p className="text-[#a8b8a0] leading-[1.9] text-[1.05rem]">
-              Aulai Mohonpur Friend For Future Club — A name built on dreams. This club is not just a place to play football; it is a unique platform for our friendship, unity, and building a better future.
+    <section 
+      id="about" 
+      className="bg-[#0a2e1a] py-32 px-6 md:px-10 relative overflow-hidden"
+    >
+      {/* 1. EMOTIONAL OVERLAY: Subtle atmospheric glow */}
+      <div className="absolute inset-0 z-0 bg-radial-gradient from-[#0d3d22] to-transparent opacity-60"></div>
+      
+      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 items-center">
+        {/* TEXT SECTION */}
+        <div className="space-y-6">
+          <SectionHeader 
+            tag="A Legacy Built on Friendship" 
+            title={"More Than A Club.\nA Family.\nA Future."} 
+          />
+          
+          <div 
+            className="space-y-6 mt-6 border-l-2 border-[#c9a227]/30 pl-6" 
+            style={{ fontFamily: "'Tiro Bangla', serif" }}
+          >
+            <p className="text-[#a8b8a0] leading-[2.1] text-[1.1rem]">
+              The{" "}
+              <span className="text-[#c9a227] font-semibold">
+                Aulai Mohonpur Friend For Future Club (AMFFF)
+              </span>{" "}
+              isn't just an organization; it’s a living dream etched in the soul
+              of our community. We are a collective promise to our own youth, a
+              unique platform fueled by the unbreakable bonds of friendship,
+              deep unity, and the unwavering conviction that{" "}
+              <span className="text-white">together, we build better.</span>
             </p>
-            <p className="text-[#a8b8a0] leading-[1.9] text-[1.05rem]">
-              We believe that the character developed on the field applies to every aspect of life. Our Junior, Senior, and Guest members have come together to form one big family.
+            
+            <p className="text-[#a8b8a0] leading-[2.1] text-[1.1rem]">
+              We believe the character forged on the field applies to every
+              battlefield in life—integrity, humility, and raw passion. In this
+              club, the hierarchy of Junior, Senior, and Guest members dissolves
+              into a single, profound truth:{" "}
+              <span className="font-bold text-[#f5f5f5]">
+                We are One Family.
+              </span>
             </p>
-            <p className="text-[#a8b8a0] leading-[1.9] text-[1.05rem]">
-              From Iftar parties to Eid reunions, from battles on the field to tournament stages — we are always together.
+            
+            <p className="text-[#a8b8a0] leading-[2.1] text-[1.1rem]">
+              Our story is written in the joy of shared Iftar tables, the warmth
+              of Eid reunions, and the sweat and tears from tournament battles.{" "}
+              <span className="text-white/90">
+                When we win, we win together. When we face challenges, we face
+                them together. We are eternally bound.
+              </span>
             </p>
           </div>
         </div>
 
-        {/* Shield SVG */}
-        <div className="flex justify-center">
-          <div className="w-[280px] h-[320px]">
-            <svg viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-              <path
-                d="M140 10 L260 55 L260 160 Q260 250 140 310 Q20 250 20 160 L20 55 Z"
-                fill="#0d3d22"
-                stroke="#c9a227"
-                strokeWidth="2.5"
-              />
-              <path
-                d="M140 30 L245 68 L245 160 Q245 238 140 292 Q35 238 35 160 L35 68 Z"
-                fill="none"
-                stroke="rgba(201,162,39,0.3)"
-                strokeWidth="1"
-              />
-              <line x1="35" y1="160" x2="245" y2="160" stroke="rgba(201,162,39,0.4)" strokeWidth="1.5" />
-              <line x1="140" y1="68" x2="140" y2="160" stroke="rgba(201,162,39,0.4)" strokeWidth="1.5" />
-              {/* Football */}
-              <circle cx="88" cy="114" r="28" fill="none" stroke="rgba(201,162,39,0.5)" strokeWidth="1.5" />
-              <polygon
-                points="88,86 97,100 113,100 101,110 105,126 88,117 71,126 75,110 63,100 79,100"
-                fill="none"
-                stroke="rgba(201,162,39,0.7)"
-                strokeWidth="1.2"
-              />
-              {/* Star */}
-              <text
-                x="192"
-                y="124"
-                textAnchor="middle"
-                fontFamily="Bebas Neue, sans-serif"
-                fontSize="44"
-                fill="rgba(201,162,39,0.6)"
-              >
-                ★
-              </text>
-              {/* Text */}
-              <text x="140" y="205" textAnchor="middle" fontFamily="Bebas Neue, sans-serif" fontSize="20" fill="#c9a227" letterSpacing="3">
-                AMFFC
-              </text>
-              <text x="140" y="225" textAnchor="middle" fontFamily="Bebas Neue, sans-serif" fontSize="11" fill="rgba(201,162,39,0.6)" letterSpacing="2">
-                AULAI MOHONPUR
-              </text>
-              <text x="140" y="245" textAnchor="middle" fontFamily="Bebas Neue, sans-serif" fontSize="9" fill="rgba(201,162,39,0.5)" letterSpacing="2">
-                FRIEND FOR FUTURE
-              </text>
-              {/* Ornaments */}
-              <circle cx="140" cy="10" r="5" fill="#c9a227" />
-              <circle cx="20" cy="55" r="4" fill="rgba(201,162,39,0.5)" />
-              <circle cx="260" cy="55" r="4" fill="rgba(201,162,39,0.5)" />
-            </svg>
-          </div>
+        {/* EMBLEM & LOGO SECTION (NO SVG) */}
+        <div className="flex justify-center md:justify-end relative">
+          <img src="/logo.png" alt="AMFFF Club Logo" className="w-48 h-48" />
         </div>
       </div>
     </section>

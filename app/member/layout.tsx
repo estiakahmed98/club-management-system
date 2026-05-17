@@ -14,6 +14,7 @@ export default function MemberLayout({
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +32,21 @@ export default function MemberLayout({
         return;
       }
       setUser(userData);
+
+      // Fetch member profile for header (name/photo)
+      if (userData?.id) {
+        fetch(`/api/member/profile?userId=${encodeURIComponent(userData.id)}`)
+          .then(async (res) => {
+            if (!res.ok) return null;
+            return res.json();
+          })
+          .then((data) => {
+            if (data) setProfile(data);
+          })
+          .catch(() => {
+            // ignore header profile fetch errors
+          });
+      }
     } catch {
       router.push("/auth/login");
     }
@@ -77,14 +93,14 @@ export default function MemberLayout({
         {/* Header */}
         <MemberHeader
           onMenuClick={toggleSidebar}
-          userName={user?.name || user?.email?.split("@")[0]}
+          userName={profile?.name || user?.name || user?.email?.split("@")[0]}
           userEmail={user?.email}
-          userPhoto={user?.photoUrl}
+          userPhoto={profile?.imageUrl}
         />
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto">
-          <div className="container mx-auto px-4 py-6 lg:px-6 lg:py-8">
+          <div>
             {children}
           </div>
         </main>

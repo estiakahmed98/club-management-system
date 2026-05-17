@@ -1,92 +1,108 @@
-import Image from "next/image";
-import type { MemberProfile, TeamCategory } from "@/types/club";
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import SectionHeader from "./SectionHeader";
+import MemberCard from "../MemberCard";
 
-const DEFAULT_MEMBERS: MemberProfile[] = [
-  { id: "1", name: "Rahim Ali", jerseyNumber: "10", teamCategory: "SENIOR" },
-  { id: "2", name: "Kamal Hossain", jerseyNumber: "7", teamCategory: "SENIOR" },
-  { id: "3", name: "Sakib Mia", jerseyNumber: "1", teamCategory: "JUNIOR" },
-  { id: "4", name: "Riyaz Uddin", jerseyNumber: "5", teamCategory: "JUNIOR" },
-  { id: "5", name: "Tanvir Ahmed", jerseyNumber: "11", teamCategory: "JUNIOR" },
-  { id: "6", name: "Jamal Sheikh", jerseyNumber: "4", teamCategory: "GUEST" },
-];
-
-const CATEGORY_CONFIG: Record<TeamCategory, { label: string; className: string }> = {
-  SENIOR: { label: "Senior", className: "bg-[#c9a227]/20 text-[#f0c94a]" },
-  JUNIOR: { label: "Junior", className: "bg-green-900/40 text-green-400" },
-  GUEST: { label: "Guest", className: "bg-blue-900/30 text-blue-300" },
-};
-
-function getInitials(name: string) {
-  return name.charAt(0);
+interface Member {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  phone?: string;
+  bloodGroup?: string;
+  jerseySize?: string;
+  jerseyNumber?: string;
+  address?: string;
+  bio?: string;
+  teamCategory?: string;
+  joiningDate?: string;
+  playsFootball?: boolean;
+  footballPosition?: string | null;
+  playsCricket?: boolean;
+  cricketRole?: string | null;
+  rating?: number;
+  imageUrl?: string | null;
 }
 
-interface MembersProps {
-  members?: MemberProfile[];
-}
+export default function Members() {
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default function Members({ members = DEFAULT_MEMBERS }: MembersProps) {
+  useEffect(() => {
+    async function loadMembers() {
+      try {
+        const res = await fetch("/api/member", {
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+        setMembers(data.members || []);
+      } catch (error) {
+        console.error("Failed to load members", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadMembers();
+  }, []);
+
+  const marqueeMembers = [...members, ...members];
+
   return (
-    <section id="members" className="bg-[#0a2e1a] py-24 px-6 md:px-10">
-      <div className="max-w-6xl mx-auto">
-        <SectionHeader tag="Our Family" title="Members" />
+    <section id="members" className="bg-[#0a2e1a] py-24 px-6 md:px-10 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between gap-4 mb-10">
+          <SectionHeader tag="Our Family" title="Members" />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {members.map((member) => {
-            const cat = CATEGORY_CONFIG[member.teamCategory];
-            return (
-              <div
-                key={member.id}
-                className="relative bg-[#134d2e] border border-[#c9a227]/12 p-5 text-center transition-all duration-300 group hover:border-[#c9a227] hover:-translate-y-1 overflow-hidden"
-              >
-                {/* Jersey number badge */}
-                {member.jerseyNumber && (
-                  <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-[#c9a227] text-[#0a2e1a] text-xs font-black flex items-center justify-center">
-                    {member.jerseyNumber}
-                  </div>
-                )}
-
-                {/* Avatar */}
-                <div className="w-16 h-16 rounded-full bg-[#1e7a47] flex items-center justify-center mx-auto mb-3 border-2 border-[#c9a227]/30 overflow-hidden">
-                  {member.photoUrl ? (
-                    <Image
-                      src={member.photoUrl}
-                      alt={member.name}
-                      width={64}
-                      height={64}
-                      className="object-cover w-full h-full"
-                    />
-                  ) : (
-                    <span
-                      className="text-[#c9a227]"
-                      style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem" }}
-                    >
-                      {getInitials(member.name)}
-                    </span>
-                  )}
-                </div>
-
-                <div
-                  className="text-white leading-tight mb-1"
-                  style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem" }}
-                >
-                  {member.name}
-                </div>
-
-                <span
-                  className={`inline-block text-[9px] font-bold tracking-[2px] uppercase px-3 py-1 mt-1 ${cat.className}`}
-                >
-                  {cat.label}
-                </span>
-              </div>
-            );
-          })}
+          <Link
+            href="/landing/members"
+            className="rounded-full bg-[#c9a227] px-6 py-3 text-sm font-black uppercase tracking-wider text-[#0a2e1a] hover:bg-white transition"
+          >
+            All Members
+          </Link>
         </div>
 
-        <p className="text-center mt-8 text-[#a8b8a0] text-xs tracking-[2px] uppercase">
-          These are default data — Replace with actual member information from Admin Panel
-        </p>
+        {loading ? (
+          <p className="text-center text-white">Loading members...</p>
+        ) : members.length === 0 ? (
+          <p className="text-center text-white">No members found.</p>
+        ) : (
+          <div className="relative w-full overflow-hidden">
+            <div className="flex w-max gap-8 animate-member-marquee">
+              {marqueeMembers.map((member, index) => (
+                <div
+                  key={`${member.id}-${index}`}
+                  className="shrink-0"
+                >
+                  <MemberCard member={member} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
+      <style jsx>{`
+        @keyframes member-marquee {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+
+        .animate-member-marquee {
+          animation: member-marquee 35s linear infinite;
+        }
+
+        .animate-member-marquee:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 }

@@ -55,7 +55,7 @@ export default function MemberDashboard() {
   }
 
   return (
-    <div>
+    <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">স্বাগতম, {stats?.memberName}!</h1>
         <p className="text-gray-600">আপনার ক্লাব প্রোফাইল এবং কার্যকলাপ এখানে দেখুন</p>

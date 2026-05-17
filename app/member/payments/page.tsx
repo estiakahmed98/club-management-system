@@ -67,7 +67,7 @@ export default function MemberPaymentsPage() {
   }
 
   return (
-    <div>
+    <div className="p-8">
       <h1 className="text-3xl font-bold mb-8">পেমেন্ট ইতিহাস</h1>
 
       {error && (

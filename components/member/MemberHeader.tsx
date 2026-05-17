@@ -9,6 +9,7 @@ import {
   Bell,
   LogOut,
   User,
+  Home,
   Menu,
   ChevronDown,
   Moon,
@@ -121,6 +122,19 @@ export function MemberHeader({
 
         {/* Right Section - Actions & User Menu */}
         <div className="flex items-center gap-2">
+          {/* Go to Landing */}
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="hover:bg-gray-100 dark:hover:bg-gray-800"
+            aria-label="Go to landing page"
+          >
+            <Link href="/">
+              <Home className="h-5 w-5" />
+            </Link>
+          </Button>
+
           {/* Dark Mode Toggle */}
           <Button
             variant="ghost"
@@ -183,10 +197,14 @@ export function MemberHeader({
                 variant="ghost"
                 className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 px-2"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={userPhoto} />
-                  <AvatarFallback className="bg-linear-to-r from-blue-600 to-purple-600 text-white">
-                    {userName ? getInitials(userName) : "U"}
+                <Avatar className="h-9 w-9 overflow-hidden">
+                  <AvatarImage
+                    src={userPhoto || "/default-player.png"}
+                    alt={userName || "Member"}
+                    className="object-cover object-top"
+                  />
+                  <AvatarFallback className="bg-linear-to-br from-blue-600 to-purple-600 text-white text-xs font-semibold">
+                    {userName ? getInitials(userName) : "MB"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:flex flex-col items-start">
