@@ -3,18 +3,18 @@ import type { MemberProfile, TeamCategory } from "@/types/club";
 import SectionHeader from "./SectionHeader";
 
 const DEFAULT_MEMBERS: MemberProfile[] = [
-  { id: "1", name: "রাহিম আলী", jerseyNumber: "10", teamCategory: "SENIOR" },
-  { id: "2", name: "কামাল হোসেন", jerseyNumber: "7", teamCategory: "SENIOR" },
-  { id: "3", name: "সাকিব মিয়া", jerseyNumber: "1", teamCategory: "JUNIOR" },
-  { id: "4", name: "রিয়াজ উদ্দিন", jerseyNumber: "5", teamCategory: "JUNIOR" },
-  { id: "5", name: "তানভীর আহমেদ", jerseyNumber: "11", teamCategory: "JUNIOR" },
-  { id: "6", name: "জামাল শেখ", jerseyNumber: "4", teamCategory: "GUEST" },
+  { id: "1", name: "Rahim Ali", jerseyNumber: "10", teamCategory: "SENIOR" },
+  { id: "2", name: "Kamal Hossain", jerseyNumber: "7", teamCategory: "SENIOR" },
+  { id: "3", name: "Sakib Mia", jerseyNumber: "1", teamCategory: "JUNIOR" },
+  { id: "4", name: "Riyaz Uddin", jerseyNumber: "5", teamCategory: "JUNIOR" },
+  { id: "5", name: "Tanvir Ahmed", jerseyNumber: "11", teamCategory: "JUNIOR" },
+  { id: "6", name: "Jamal Sheikh", jerseyNumber: "4", teamCategory: "GUEST" },
 ];
 
 const CATEGORY_CONFIG: Record<TeamCategory, { label: string; className: string }> = {
-  SENIOR: { label: "সিনিয়র", className: "bg-[#c9a227]/20 text-[#f0c94a]" },
-  JUNIOR: { label: "জুনিয়র", className: "bg-green-900/40 text-green-400" },
-  GUEST: { label: "গেস্ট", className: "bg-blue-900/30 text-blue-300" },
+  SENIOR: { label: "Senior", className: "bg-[#c9a227]/20 text-[#f0c94a]" },
+  JUNIOR: { label: "Junior", className: "bg-green-900/40 text-green-400" },
+  GUEST: { label: "Guest", className: "bg-blue-900/30 text-blue-300" },
 };
 
 function getInitials(name: string) {
@@ -29,7 +29,7 @@ export default function Members({ members = DEFAULT_MEMBERS }: MembersProps) {
   return (
     <section id="members" className="bg-[#0a2e1a] py-24 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
-        <SectionHeader tag="আমাদের পরিবার" title="সদস্যগণ" />
+        <SectionHeader tag="Our Family" title="Members" />
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {members.map((member) => {
@@ -84,7 +84,7 @@ export default function Members({ members = DEFAULT_MEMBERS }: MembersProps) {
         </div>
 
         <p className="text-center mt-8 text-[#a8b8a0] text-xs tracking-[2px] uppercase">
-          এগুলো ডিফল্ট ডেটা — Admin থেকে আসল সদস্য তথ্য দিয়ে পরিবর্তন করুন
+          These are default data — Replace with actual member information from Admin Panel
         </p>
       </div>
     </section>

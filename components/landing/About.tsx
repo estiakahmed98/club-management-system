@@ -6,16 +6,16 @@ export default function About() {
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 items-center">
         {/* Text */}
         <div>
-          <SectionHeader tag="আমাদের গল্প" title={"একতা, উদ্যম\nও ভবিষ্যৎ"} />
+          <SectionHeader tag="Our Story" title={"Unity, Passion\n& Future"} />
           <div className="space-y-4 mt-2" style={{ fontFamily: "'Tiro Bangla', serif" }}>
             <p className="text-[#a8b8a0] leading-[1.9] text-[1.05rem]">
-              আউলাই মহনপুর ফ্রেন্ড ফর ফিউচার ক্লাব — একটি স্বপ্নের নাম। এই ক্লাব শুধু ফুটবল খেলার জায়গা নয়, এটি আমাদের বন্ধুত্বের, একতার এবং ভবিষ্যৎ গড়ার এক অনন্য প্ল্যাটফর্ম।
+              Aulai Mohonpur Friend For Future Club — A name built on dreams. This club is not just a place to play football; it is a unique platform for our friendship, unity, and building a better future.
             </p>
             <p className="text-[#a8b8a0] leading-[1.9] text-[1.05rem]">
-              আমরা বিশ্বাস করি যে খেলার মাঠে যে চরিত্র গড়ে ওঠে, তা জীবনের প্রতিটি ক্ষেত্রে কাজে লাগে। আমাদের জুনিয়র, সিনিয়র এবং গেস্ট — সকল সদস্যরা মিলে এক পরিবার গঠন করেছি।
+              We believe that the character developed on the field applies to every aspect of life. Our Junior, Senior, and Guest members have come together to form one big family.
             </p>
             <p className="text-[#a8b8a0] leading-[1.9] text-[1.05rem]">
-              ইফতার পার্টি থেকে ঈদ পুনর্মিলনী, মাঠের লড়াই থেকে টুর্নামেন্টের মঞ্চ — আমরা সবসময় একসাথে।
+              From Iftar parties to Eid reunions, from battles on the field to tournament stages — we are always together.
             </p>
           </div>
         </div>

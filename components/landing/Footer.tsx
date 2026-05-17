@@ -1,9 +1,9 @@
 const LINKS = [
-  { href: "#about", label: "আমরা" },
-  { href: "#events", label: "ইভেন্ট" },
-  { href: "#matches", label: "ম্যাচ" },
-  { href: "#gallery", label: "গ্যালারি" },
-  { href: "#members", label: "সদস্য" },
+  { href: "#about", label: "About" },
+  { href: "#events", label: "Events" },
+  { href: "#matches", label: "Matches" },
+  { href: "#gallery", label: "Gallery" },
+  { href: "#members", label: "Members" },
 ];
 
 export default function Footer() {
@@ -15,8 +15,9 @@ export default function Footer() {
       >
         Aulai Mohonpur FFF Club
       </div>
+
       <div className="text-[#a8b8a0] text-[11px] tracking-[4px] uppercase mb-8">
-        একতা · উদ্যম · ভবিষ্যৎ
+        Unity · Passion · Future
       </div>
 
       <ul className="flex justify-center gap-8 list-none mb-8 flex-wrap">
@@ -33,7 +34,7 @@ export default function Footer() {
       </ul>
 
       <div className="text-[#a8b8a0]/50 text-xs">
-        © ২০২৫ Aulai Mohonpur Friend For Future Club • সর্বস্বত্ব সংরক্ষিত
+        © {new Date().getFullYear()} Aulai Mohonpur Friend For Future Club • All Rights Reserved
       </div>
     </footer>
   );

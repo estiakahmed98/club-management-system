@@ -70,11 +70,11 @@ export default function StatsBar({ stats = DEFAULT_STATS }: StatsBarProps) {
   }, []);
 
   const items = [
-    { value: stats.totalMembers, label: "সক্রিয় সদস্য" },
-    { value: stats.totalMatches, label: "ম্যাচ খেলা হয়েছে" },
-    { value: stats.totalWins, label: "জয়" },
-    { value: stats.totalEvents, label: "ইভেন্ট আয়োজন" },
-    { value: stats.totalTrophies, label: "ট্রফি অর্জন" },
+    { value: stats.totalMembers, label: "Active Members" },
+    { value: stats.totalMatches, label: "Matches Played" },
+    { value: stats.totalWins, label: "Wins" },
+    { value: stats.totalEvents, label: "Events Organized" },
+    { value: stats.totalTrophies, label: "Trophies Won" },
   ];
 
   return (

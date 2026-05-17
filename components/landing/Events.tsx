@@ -13,22 +13,22 @@ const EVENT_ICONS: Record<string, string> = {
 };
 
 const DEFAULT_EVENTS: Event[] = [
-  { id: "1", name: "ইফতার মাহফিল", type: "religious", eventDate: new Date().toISOString(), location: "ক্লাব মাঠ", description: "রমজান মাস • ক্লাব মাঠ" },
-  { id: "2", name: "ঈদ পুনর্মিলনী", type: "social", eventDate: new Date().toISOString(), location: "ক্লাব হাউস", description: "ঈদুল ফিতর • সদস্য সকল" },
-  { id: "3", name: "পিকনিক ২০২৫", type: "picnic", eventDate: new Date().toISOString(), location: "বাইরে", description: "শীতকাল • বাইরে কোথাও" },
-  { id: "4", name: "মৌসুমী টুর্নামেন্ট", type: "tournament", eventDate: new Date().toISOString(), location: "স্থানীয় মাঠ", description: "বার্ষিক • স্থানীয় মাঠ" },
-  { id: "5", name: "ক্লাব প্রতিষ্ঠা দিবস", type: "anniversary", eventDate: new Date().toISOString(), description: "প্রতি বছর • বিশেষ উদযাপন" },
-  { id: "6", name: "সদস্য সভা", type: "meeting", eventDate: new Date().toISOString(), location: "ক্লাব হাউস", description: "মাসিক • ক্লাব হাউস" },
+  { id: "1", name: "Iftar Gathering", type: "religious", eventDate: new Date().toISOString(), location: "Club Ground", description: "Ramadan Month • Club Ground" },
+  { id: "2", name: "Eid Reunion", type: "social", eventDate: new Date().toISOString(), location: "Club House", description: "Eid-ul-Fitr • All Members" },
+  { id: "3", name: "Picnic 2025", type: "picnic", eventDate: new Date().toISOString(), location: "Outside", description: "Winter Season • Somewhere Outside" },
+  { id: "4", name: "Seasonal Tournament", type: "tournament", eventDate: new Date().toISOString(), location: "Local Ground", description: "Annual • Local Ground" },
+  { id: "5", name: "Club Foundation Day", type: "anniversary", eventDate: new Date().toISOString(), description: "Every Year • Special Celebration" },
+  { id: "6", name: "Member Meeting", type: "meeting", eventDate: new Date().toISOString(), location: "Club House", description: "Monthly • Club House" },
 ];
 
 const TYPE_LABELS: Record<string, string> = {
-  religious: "ধর্মীয় ইভেন্ট",
-  social: "সামাজিক ইভেন্ট",
-  picnic: "বার্ষিক আয়োজন",
-  tournament: "ক্রীড়া ইভেন্ট",
-  anniversary: "বার্ষিকী",
-  meeting: "সাংগঠনিক",
-  other: "ইভেন্ট",
+  religious: "Religious Event",
+  social: "Social Event",
+  picnic: "Annual Gathering",
+  tournament: "Sports Event",
+  anniversary: "Anniversary",
+  meeting: "Organizational",
+  other: "Event",
 };
 
 interface EventsProps {
@@ -39,7 +39,7 @@ export default function Events({ events = DEFAULT_EVENTS }: EventsProps) {
   return (
     <section id="events" className="bg-[#134d2e] py-24 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
-        <SectionHeader tag="আসন্ন ও সাম্প্রতিক" title="ইভেন্টসমূহ" />
+        <SectionHeader tag="Upcoming & Recent" title="Events" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
             <div
@@ -55,7 +55,7 @@ export default function Events({ events = DEFAULT_EVENTS }: EventsProps) {
               </span>
 
               <span className="block text-[#c9a227] text-[10px] font-bold tracking-[3px] uppercase mb-3">
-                {TYPE_LABELS[event.type] ?? "ইভেন্ট"}
+                {TYPE_LABELS[event.type] ?? "Event"}
               </span>
               <div
                 className="text-white leading-tight mb-2"

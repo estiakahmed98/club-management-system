@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const NAV_LINKS = [
-  { href: "#about", label: "আমরা" },
-  { href: "#events", label: "ইভেন্ট" },
-  { href: "#matches", label: "ম্যাচ" },
-  { href: "#gallery", label: "গ্যালারি" },
-  { href: "#members", label: "সদস্য" },
+  { href: "#about", label: "About Us" },
+  { href: "#events", label: "Events" },
+  { href: "#matches", label: "Matches" },
+  { href: "#gallery", label: "Gallery" },
+  { href: "#members", label: "Members" },
+  { href: "/auth/login", label: "Login" },
 ];
 
 export default function Navbar() {
@@ -26,19 +28,35 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-4 transition-all duration-300 ${
         scrolled
           ? "bg-[#0a2e1a]/97 backdrop-blur-md shadow-[0_2px_20px_rgba(0,0,0,0.4)]"
-          : "bg-gradient-to-b from-[#0a2e1a]/97 to-transparent"
+          : "bg-linear-to-b from-[#0a2e1a]/97 to-transparent"
       }`}
     >
-      {/* Logo */}
       <Link href="/" className="flex items-center gap-3 no-underline group">
-        <div className="w-12 h-12 rounded-full bg-[#c9a227] flex items-center justify-center font-black text-[#0a2e1a] text-sm tracking-widest shadow-[0_0_0_3px_#0a2e1a,0_0_0_5px_#c9a227] transition-transform group-hover:scale-105">
-          AMFF
-        </div>
-        <div className="leading-tight">
-          <span className="block text-[#c9a227] text-lg tracking-[3px] font-black uppercase">
+        {/* Logo */}
+
+        <Image
+          src="/amfff.png"
+          alt="AMFF Logo"
+          width={72}
+          height={72}
+          className="object-cover"
+          priority
+        />
+
+        {/* Text */}
+        <div className="leading-none">
+          <span
+            className="block text-[#c9a227] uppercase"
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: "clamp(1.5rem, 3vw, 2rem)",
+              letterSpacing: "4px",
+            }}
+          >
             Friend For Future
           </span>
-          <span className="block text-[#a8b8a0] text-[10px] tracking-[4px] uppercase">
+
+          <span className="block text-[#a8b8a0] text-[10px] md:text-[11px] tracking-[5px] uppercase mt-1">
             Aulai Mohonpur
           </span>
         </div>
