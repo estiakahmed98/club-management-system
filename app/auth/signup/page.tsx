@@ -223,7 +223,7 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <Card className="lg:col-span-3 border-white/10 bg-white/90 dark:bg-gray-950/60 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+          <Card className="lg:col-span-3 border-white/10 bg-white/90 dark:bg-gray-950/60 backdrop-blur supports-backdrop-filter:bg-white/70">
             <CardHeader>
               <CardTitle className="flex items-center justify-between gap-2">
                 <span>Member Signup</span>
@@ -305,19 +305,7 @@ export default function SignupPage() {
                         placeholder="+880 1XXX XXXXXX"
                       />
                     </div>
-                    {/* <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Star className="h-4 w-4 text-gray-500" /> Rating
-                      </label>
-                      <Input
-                        type="number"
-                        step="0.1"
-                        value={formData.rating}
-                        onChange={(e) => setFormData((p) => ({ ...p, rating: e.target.value }))}
-                        placeholder="0"
-                      />
-                    </div> */}
-
+    
                     <div className="space-y-2">
                       <label className="text-sm font-medium flex items-center gap-2">
                         <Droplet className="h-4 w-4 text-gray-500" /> Blood Group

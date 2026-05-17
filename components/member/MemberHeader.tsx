@@ -30,15 +30,30 @@ interface MemberHeaderProps {
   onMenuClick: () => void;
   userName?: string;
   userEmail?: string;
-  userPhoto?: string;
+  userPhoto?: string; // This will be the imageUrl from MemberProfile
 }
 
-export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: MemberHeaderProps) {
+export function MemberHeader({
+  onMenuClick,
+  userName,
+  userEmail,
+  userPhoto,
+}: MemberHeaderProps) {
   const router = useRouter();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [notifications, setNotifications] = useState([
-    { id: 1, title: "New Event", message: "Upcoming Iftar party on March 25", read: false },
-    { id: 2, title: "Payment Reminder", message: "Monthly subscription due", read: false },
+    {
+      id: 1,
+      title: "New Event",
+      message: "Upcoming Iftar party on March 25",
+      read: false,
+    },
+    {
+      id: 2,
+      title: "Payment Reminder",
+      message: "Monthly subscription due",
+      read: false,
+    },
   ]);
 
   useEffect(() => {
@@ -70,7 +85,7 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const getInitials = (name: string) => {
     return name
@@ -113,13 +128,21 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
             onClick={toggleDarkMode}
             className="hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {isDarkMode ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
           </Button>
 
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative hover:bg-gray-100 dark:hover:bg-gray-800">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-white text-xs">
@@ -137,9 +160,16 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
                 </div>
               ) : (
                 notifications.map((notification) => (
-                  <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3 cursor-pointer">
-                    <div className="font-medium text-sm">{notification.title}</div>
-                    <div className="text-xs text-gray-500 mt-1">{notification.message}</div>
+                  <DropdownMenuItem
+                    key={notification.id}
+                    className="flex flex-col items-start p-3 cursor-pointer"
+                  >
+                    <div className="font-medium text-sm">
+                      {notification.title}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {notification.message}
+                    </div>
                   </DropdownMenuItem>
                 ))
               )}
@@ -149,7 +179,10 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 px-2">
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 px-2"
+              >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={userPhoto} />
                   <AvatarFallback className="bg-linear-to-r from-blue-600 to-purple-600 text-white">
@@ -157,8 +190,12 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:flex flex-col items-start">
-                  <span className="text-sm font-medium">{userName || "Member"}</span>
-                  <span className="text-xs text-gray-500">{userEmail || "member@club.com"}</span>
+                  <span className="text-sm font-medium">
+                    {userName || "Member"}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {userEmail || "member@club.com"}
+                  </span>
                 </div>
                 <ChevronDown className="h-4 w-4 hidden md:block" />
               </Button>
@@ -172,14 +209,11 @@ export function MemberHeader({ onMenuClick, userName, userEmail, userPhoto }: Me
                   <span>Profile</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/member/settings" className="cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-600 cursor-pointer"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Logout</span>
               </DropdownMenuItem>

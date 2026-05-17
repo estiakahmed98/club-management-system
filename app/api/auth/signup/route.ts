@@ -7,47 +7,45 @@ function isValidTeamCategory(value: unknown): value is TeamCategory {
   return value === "JUNIOR" || value === "SENIOR" || value === "GUEST";
 }
 
+function clean(value: unknown) {
+  return typeof value === "string" && value.trim() !== ""
+    ? value.trim()
+    : null;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as {
-      email?: string;
-      password?: string;
-      name?: string;
-      phone?: string | null;
-      bloodGroup?: string | null;
-      jerseySize?: string | null;
-      jerseyNumber?: string | null;
-      address?: string | null;
-      bio?: string | null;
-      teamCategory?: TeamCategory;
-      playsFootball?: boolean;
-      footballPosition?: string | null;
-      playsCricket?: boolean;
-      cricketRole?: string | null;
-      rating?: number | string | null;
-      imageUrl?: string | null;
-    };
+    const body = await req.json();
 
-    const email = body.email?.trim().toLowerCase();
-    const password = body.password;
-    const name = body.name?.trim();
-    const phone = body.phone?.trim() || null;
-    const bloodGroup = body.bloodGroup?.trim() || null;
-    const jerseySize = body.jerseySize?.trim() || null;
-    const jerseyNumber = body.jerseyNumber?.trim() || null;
-    const address = body.address?.trim() || null;
-    const bio = body.bio?.trim() || null;
-    const teamCategory = body.teamCategory || "JUNIOR";
-    const playsFootball = body.playsFootball ?? true;
-    const footballPosition = body.footballPosition?.trim() || null;
-    const playsCricket = body.playsCricket ?? false;
-    const cricketRole = body.cricketRole?.trim() || null;
+    console.log("[SIGNUP BODY]", body);
+
+    const email = clean(body.email)?.toLowerCase();
+    const password =
+      typeof body.password === "string" ? body.password : null;
+
+    const name = clean(body.name);
+    const phone = clean(body.phone);
+    const bloodGroup = clean(body.bloodGroup);
+    const jerseySize = clean(body.jerseySize);
+    const jerseyNumber = clean(body.jerseyNumber);
+    const address = clean(body.address);
+    const bio = clean(body.bio);
+    const footballPosition = clean(body.footballPosition);
+    const cricketRole = clean(body.cricketRole);
+    const imageUrl = clean(body.imageUrl);
+
+    const rawTeamCategory = String(body.teamCategory || "JUNIOR")
+      .trim()
+      .toUpperCase();
+
     const ratingRaw = body.rating;
     const rating =
       ratingRaw === undefined || ratingRaw === null || ratingRaw === ""
         ? 0
         : Number(ratingRaw);
-    const imageUrl = body.imageUrl?.trim() || null;
+
+    const playsFootball = body.playsFootball ?? true;
+    const playsCricket = body.playsCricket ?? false;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -57,17 +55,31 @@ export async function POST(req: NextRequest) {
     }
 
     if (!Number.isFinite(rating)) {
-      return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
-    }
-
-    if (!isValidTeamCategory(teamCategory)) {
       return NextResponse.json(
-        { error: "Invalid team category" },
-        { status: 400 },
+        { error: "Invalid rating" },
+        { status: 400 }
       );
     }
 
-    // Hash password
+    if (!isValidTeamCategory(rawTeamCategory)) {
+      return NextResponse.json(
+        { error: "Invalid team category" },
+        { status: 400 }
+      );
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "User already exists" },
+        { status: 400 }
+      );
+    }
+
     const hashedPassword = await hashPassword(password);
 
     const created = await prisma.user.create({
@@ -85,10 +97,10 @@ export async function POST(req: NextRequest) {
             jerseyNumber,
             address,
             bio,
-            teamCategory,
-            playsFootball,
+            teamCategory: rawTeamCategory,
+            playsFootball: Boolean(playsFootball),
             footballPosition,
-            playsCricket,
+            playsCricket: Boolean(playsCricket),
             cricketRole,
             rating,
             imageUrl,
@@ -106,11 +118,7 @@ export async function POST(req: NextRequest) {
       {
         success: true,
         message: "User created successfully",
-        user: {
-          id: created.id,
-          email: created.email,
-          role: created.role,
-        },
+        user: created,
       },
       { status: 201 }
     );
@@ -119,7 +127,10 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
-        return NextResponse.json({ error: "User already exists" }, { status: 400 });
+        return NextResponse.json(
+          { error: "User already exists" },
+          { status: 400 }
+        );
       }
     }
 
