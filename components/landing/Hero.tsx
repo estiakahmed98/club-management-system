@@ -137,7 +137,7 @@ export default function Hero({ slides = DEFAULT_SLIDES }: HeroProps) {
       ))}
 
       {/* Content - Bottom Left */}
-      <div className="relative z-10 px-6 md:px-12 pb-12 md:pb-20 w-full max-w-5xl">
+      <div className="relative z-10 px-6 md:px-12 pb-10 md:pb-14 w-full max-w-5xl">
         <span className="inline-block bg-[#c9a227] text-[#0a2e1a] text-[10px] md:text-[11px] font-bold tracking-[3px] uppercase px-3 py-1 mb-5">
           Founded with passion • Aulai Mohonpur
         </span>

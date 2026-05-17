@@ -37,7 +37,7 @@ interface EventsProps {
 
 export default function Events({ events = DEFAULT_EVENTS }: EventsProps) {
   return (
-    <section id="events" className="bg-[#134d2e] py-24 px-6 md:px-10">
+    <section id="events" className="bg-[#134d2e] py-16 md:py-20 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
         <SectionHeader tag="Upcoming & Recent" title="Events" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -5,7 +5,7 @@ export default function About() {
   return (
     <section 
       id="about" 
-      className="bg-[#0a2e1a] py-32 px-6 md:px-10 relative overflow-hidden"
+      className="bg-[#0a2e1a] py-20 md:py-24 px-6 md:px-10 relative overflow-hidden"
     >
       {/* 1. EMOTIONAL OVERLAY: Subtle atmospheric glow */}
       <div className="absolute inset-0 z-0 bg-radial-gradient from-[#0d3d22] to-transparent opacity-60"></div>

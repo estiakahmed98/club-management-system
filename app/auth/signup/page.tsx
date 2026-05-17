@@ -24,8 +24,11 @@ import {
   MapPin,
   Shirt,
   Shield,
-  Star,
   User,
+  Eye,
+  EyeOff,
+  Footprints,
+  Trophy,
 } from "lucide-react";
 
 type TeamCategory = "JUNIOR" | "SENIOR" | "GUEST";
@@ -180,38 +183,41 @@ export default function SignupPage() {
 
   return (
     <main className="min-h-screen relative overflow-hidden">
+      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url('/auth-bg.jpg')",
         }}
       />
-      <div className="absolute inset-0 bg-linear-to-br from-black/70 via-black/55 to-black/70" />
+      <div className="absolute inset-0 bg-linear-to-br from-[#0a2e1a]/90 via-[#0a2e1a]/80 to-[#0a2e1a]/90" />
       <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-[#c9a227]/20 blur-3xl" />
-      <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-[#1e7a47]/25 blur-3xl" />
+      <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-[#c9a227]/15 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10">
         <div className="grid gap-6 lg:grid-cols-5 items-start">
+          {/* Left Side Info */}
           <div className="lg:col-span-2 space-y-5 text-white">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gray-500 bg-black/25 px-3 py-1 text-sm">
-              <Shield className="h-4 w-4" />
-              Member onboarding
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#c9a227]/30 bg-[#c9a227]/10 backdrop-blur-sm px-3 py-1 text-sm">
+              <Shield className="h-4 w-4 text-[#c9a227]" />
+              <span className="text-white/90">Member onboarding</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-              Create your member account
+              Create your <span className="text-[#c9a227]">member</span> account
             </h1>
-            <p className="text-white/80 leading-relaxed">
+            <p className="text-white/70 leading-relaxed">
               Fill in your profile details now so your dashboard is ready from
-              day one. After signup, log in and you’ll be routed to your member
+              day one. After signup, log in and you'll be routed to your member
               dashboard.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#134d2e]/70 to-[#0a2e1a]/70 backdrop-blur-sm border border-gray-500">
+
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-[#0a2e1a]/60 backdrop-blur-md border border-[#c9a227]/20">
               <div className="text-center sm:text-left">
-                <p className="text-sm text-white/85 font-medium">
+                <p className="text-sm text-white/80 font-medium">
                   Already have an account?{" "}
                   <Link
                     href="/auth/login"
-                    className="text-[#f0c94a] font-bold hover:text-[#c9a227] transition-all duration-200 underline-offset-4 hover:underline inline-flex items-center gap-1"
+                    className="text-[#c9a227] font-bold hover:text-[#f0c94a] transition-all duration-200 underline-offset-4 hover:underline inline-flex items-center gap-1"
                   >
                     Log in
                     <svg
@@ -233,8 +239,8 @@ export default function SignupPage() {
 
               <div>
                 <Link href="/">
-                  <button className="group relative inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#c9a227] to-[#f0c94a] text-[#0a2e1a] text-sm font-semibold shadow-lg shadow-black/30 hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#f0c94a] to-[#c9a227] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <button className="group relative inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#c9a227] text-[#0a2e1a] text-sm font-semibold shadow-lg shadow-[#c9a227]/20 hover:shadow-xl hover:shadow-[#c9a227]/30 hover:scale-105 transition-all duration-300 overflow-hidden">
+                    <div className="absolute inset-0 bg-[#f0c94a] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <svg
                       className="w-4 h-4 relative z-10"
                       fill="none"
@@ -255,25 +261,19 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <Card className="lg:col-span-3 border-[#c9a227]/20 bg-white/25 dark:bg-black/35 backdrop-blur-lg shadow-xl transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between gap-2">
-                <span>Member Signup</span>
-                <Badge variant="secondary" className="gap-1">
-                  <Calendar className="h-3.5 w-3.5" /> For members only
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+          {/* Signup Form Card */}
+          <Card className="lg:col-span-3 border border-[#c9a227]/20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden">
+            <CardContent className="pt-6">
               <form onSubmit={handleSignup} className="space-y-6">
+                {/* Account Section */}
                 <div className="space-y-3">
-                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Account
+                  <div className="text-sm font-semibold text-[#0a2e1a] dark:text-white border-l-3 border-[#c9a227] pl-3">
+                    Account Information
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <User className="h-4 w-4 text-gray-800" /> Full Name{" "}
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <User className="h-4 w-4 text-[#c9a227]" /> Full Name{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <Input
@@ -282,12 +282,13 @@ export default function SignupPage() {
                           setFormData((p) => ({ ...p, name: e.target.value }))
                         }
                         placeholder="Enter your name"
+                        className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227] focus:ring-[#c9a227]/20"
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-gray-500" /> Email{" "}
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-[#c9a227]" /> Email{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <Input
@@ -297,12 +298,13 @@ export default function SignupPage() {
                           setFormData((p) => ({ ...p, email: e.target.value }))
                         }
                         placeholder="member@example.com"
+                        className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227] focus:ring-[#c9a227]/20"
                         required
                       />
                     </div>
                     <div className="space-y-2 md:col-span-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-gray-500" /> Password{" "}
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-[#c9a227]" /> Password{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -316,137 +318,152 @@ export default function SignupPage() {
                             }))
                           }
                           placeholder="Create a strong password"
+                          className="pr-24 border-gray-300 dark:border-gray-600 focus:border-[#c9a227] focus:ring-[#c9a227]/20"
                           required
-                          className="pr-24"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword((prev) => !prev)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                         >
-                          {showPassword ? "Hide" : "Show"}
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </button>
                       </div>
                     </div>
                   </div>
                 </div>
 
+                {/* Profile Section */}
                 <div className="space-y-3">
-                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Profile
+                  <div className="text-sm font-semibold text-[#0a2e1a] dark:text-white border-l-3 border-[#c9a227] pl-3">
+                    Profile Details
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Phone</label>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Phone
+                      </label>
                       <Input
                         value={formData.phone}
                         onChange={(e) =>
                           setFormData((p) => ({ ...p, phone: e.target.value }))
                         }
                         placeholder="+880 1XXX XXXXXX"
+                        className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227] focus:ring-[#c9a227]/20"
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Droplet className="h-4 w-4 text-gray-500" /> Blood
-                        Group
-                      </label>
-                      <Select
-                        value={formData.bloodGroup || "none"}
-                        onValueChange={(v) =>
-                          setFormData((p) => ({
-                            ...p,
-                            bloodGroup: v === "none" ? "" : v,
-                          }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {bloodGroups.map((bg) => (
-                            <SelectItem key={bg} value={bg}>
-                              {bg}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                          <Droplet className="h-4 w-4 text-[#c9a227]" /> Blood
+                          Group
+                        </label>
+                        <Select
+                          value={formData.bloodGroup || "none"}
+                          onValueChange={(v) =>
+                            setFormData((p) => ({
+                              ...p,
+                              bloodGroup: v === "none" ? "" : v,
+                            }))
+                          }
+                        >
+                          <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227]">
+                            <SelectValue placeholder="Select blood group" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {bloodGroups.map((bg) => (
+                              <SelectItem key={bg} value={bg}>
+                                {bg}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                          <Shirt className="h-4 w-4 text-[#c9a227]" /> Jersey
+                          Size
+                        </label>
+                        <Select
+                          value={formData.jerseySize || "none"}
+                          onValueChange={(v) =>
+                            setFormData((p) => ({
+                              ...p,
+                              jerseySize: v === "none" ? "" : v,
+                            }))
+                          }
+                        >
+                          <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227]">
+                            <SelectValue placeholder="Select jersey size" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {jerseySizes.map((size) => (
+                              <SelectItem key={size} value={size}>
+                                {size}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Shirt className="h-4 w-4 text-gray-500" /> Jersey Size
-                      </label>
-                      <Select
-                        value={formData.jerseySize || "none"}
-                        onValueChange={(v) =>
-                          setFormData((p) => ({
-                            ...p,
-                            jerseySize: v === "none" ? "" : v,
-                          }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {jerseySizes.map((size) => (
-                            <SelectItem key={size} value={size}>
-                              {size}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Jersey Number
+                        </label>
+                        <Input
+                          value={formData.jerseyNumber}
+                          onChange={(e) =>
+                            setFormData((p) => ({
+                              ...p,
+                              jerseyNumber: e.target.value,
+                            }))
+                          }
+                          placeholder="e.g. 10"
+                          className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227] focus:ring-[#c9a227]/20"
+                        />
+                      </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">
-                        Jersey Number
-                      </label>
-                      <Input
-                        value={formData.jerseyNumber}
-                        onChange={(e) =>
-                          setFormData((p) => ({
-                            ...p,
-                            jerseyNumber: e.target.value,
-                          }))
-                        }
-                        placeholder="e.g. 10"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">
-                        Team Category
-                      </label>
-                      <Select
-                        value={formData.teamCategory}
-                        onValueChange={(v) =>
-                          setFormData((p) => ({
-                            ...p,
-                            teamCategory: v as TeamCategory,
-                          }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {teamCategories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Team Category
+                        </label>
+                        <Select
+                          value={formData.teamCategory}
+                          onValueChange={(v) =>
+                            setFormData((p) => ({
+                              ...p,
+                              teamCategory: v as TeamCategory,
+                            }))
+                          }
+                        >
+                          <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227]">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {teamCategories.map((category) => (
+                              <SelectItem key={category} value={category}>
+                                {category.charAt(0) +
+                                  category.slice(1).toLowerCase()}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-gray-500" /> Address
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-[#c9a227]" /> Address
                       </label>
                       <Textarea
                         value={formData.address}
@@ -457,26 +474,30 @@ export default function SignupPage() {
                           }))
                         }
                         placeholder="Your current address"
-                        rows={3}
+                        rows={2}
+                        className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227] focus:ring-[#c9a227]/20 resize-none"
                       />
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
-                      <label className="text-sm font-medium">Bio</label>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Bio
+                      </label>
                       <Textarea
                         value={formData.bio}
                         onChange={(e) =>
                           setFormData((p) => ({ ...p, bio: e.target.value }))
                         }
                         placeholder="A short bio (optional)"
-                        rows={3}
+                        rows={2}
+                        className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227] focus:ring-[#c9a227]/20 resize-none"
                       />
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <ImageIcon className="h-4 w-4 text-gray-500" /> Photo
-                        (optional)
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <ImageIcon className="h-4 w-4 text-[#c9a227]" /> Profile
+                        Photo
                       </label>
                       <div className="flex items-center gap-3">
                         <Input
@@ -489,39 +510,36 @@ export default function SignupPage() {
                             void handleImageUpload(file);
                             e.currentTarget.value = "";
                           }}
+                          className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227] file:bg-[#c9a227] file:text-[#0a2e1a] file:border-0 file:rounded-lg file:font-semibold"
                         />
-                        <div className="text-xs text-gray-500 min-w-24 text-right">
-                          {imageUploading
-                            ? "Uploading..."
-                            : formData.imageUrl
-                              ? "Uploaded"
-                              : "No photo"}
-                        </div>
                       </div>
-                      {formData.imageUrl ? (
-                        <div className="flex items-center justify-between rounded-md border px-3 py-2 text-xs">
-                          <span className="truncate">{formData.imageUrl}</span>
+                      {formData.imageUrl && (
+                        <div className="flex items-center justify-between rounded-md border border-[#c9a227]/30 bg-[#c9a227]/5 px-3 py-2 text-xs">
+                          <span className="truncate text-gray-600 dark:text-gray-400">
+                            Photo uploaded ✓
+                          </span>
                           <button
                             type="button"
                             onClick={() =>
                               setFormData((p) => ({ ...p, imageUrl: "" }))
                             }
-                            className="text-red-600 hover:underline"
+                            className="text-red-600 hover:underline text-xs"
                           >
                             Remove
                           </button>
                         </div>
-                      ) : null}
+                      )}
                     </div>
                   </div>
                 </div>
 
+                {/* Sports Section */}
                 <div className="space-y-3">
-                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Sports
+                  <div className="text-sm font-semibold text-[#0a2e1a] dark:text-white border-l-3 border-[#c9a227] pl-3">
+                    Sports Interests
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/30">
+                    <label className="flex items-start gap-3 rounded-lg border border-gray-300 dark:border-gray-600 p-4 cursor-pointer hover:bg-[#c9a227]/5 transition-colors">
                       <input
                         type="checkbox"
                         checked={formData.playsFootball}
@@ -531,18 +549,20 @@ export default function SignupPage() {
                             playsFootball: e.target.checked,
                           }))
                         }
-                        className="mt-1 h-4 w-4 rounded"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-[#c9a227] focus:ring-[#c9a227]/20"
                       />
                       <div className="space-y-1">
-                        <div className="text-sm font-medium">
+                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                          <Footprints className="h-4 w-4 text-[#c9a227]" />{" "}
                           Plays Football
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
                           Choose your preferred position.
                         </div>
                       </div>
                     </label>
-                    <label className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/30">
+
+                    <label className="flex items-start gap-3 rounded-lg border border-gray-300 dark:border-gray-600 p-4 cursor-pointer hover:bg-[#c9a227]/5 transition-colors">
                       <input
                         type="checkbox"
                         checked={formData.playsCricket}
@@ -552,86 +572,92 @@ export default function SignupPage() {
                             playsCricket: e.target.checked,
                           }))
                         }
-                        className="mt-1 h-4 w-4 rounded"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-[#c9a227] focus:ring-[#c9a227]/20"
                       />
                       <div className="space-y-1">
-                        <div className="text-sm font-medium">Plays Cricket</div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                          <Trophy className="h-4 w-4 text-[#c9a227]" /> Plays
+                          Cricket
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
                           Choose your role in cricket.
                         </div>
                       </div>
                     </label>
 
-                    {formData.playsFootball ? (
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Football Position
-                        </label>
-                        <Select
-                          value={formData.footballPosition || "none"}
-                          onValueChange={(v) =>
-                            setFormData((p) => ({
-                              ...p,
-                              footballPosition: v === "none" ? "" : v,
-                            }))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select position" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {footballPositions.map((pos) => (
-                              <SelectItem key={pos} value={pos}>
-                                {pos}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    ) : null}
+                    <div className="grid grid-cols-2 gap-4 ">
+                      {formData.playsFootball && (
+                        <div className="space-y-2 md:col-span-2 animate-fadeIn">
+                          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Football Position
+                          </label>
+                          <Select
+                            value={formData.footballPosition || "none"}
+                            onValueChange={(v) =>
+                              setFormData((p) => ({
+                                ...p,
+                                footballPosition: v === "none" ? "" : v,
+                              }))
+                            }
+                          >
+                            <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227]">
+                              <SelectValue placeholder="Select position" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">None</SelectItem>
+                              {footballPositions.map((pos) => (
+                                <SelectItem key={pos} value={pos}>
+                                  {pos}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
 
-                    {formData.playsCricket ? (
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Cricket Role
-                        </label>
-                        <Select
-                          value={formData.cricketRole || "none"}
-                          onValueChange={(v) =>
-                            setFormData((p) => ({
-                              ...p,
-                              cricketRole: v === "none" ? "" : v,
-                            }))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select role" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {cricketRoles.map((role) => (
-                              <SelectItem key={role} value={role}>
-                                {role}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    ) : null}
+                      {formData.playsCricket && (
+                        <div className="space-y-2 md:col-span-2 animate-fadeIn">
+                          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Cricket Role
+                          </label>
+                          <Select
+                            value={formData.cricketRole || "none"}
+                            onValueChange={(v) =>
+                              setFormData((p) => ({
+                                ...p,
+                                cricketRole: v === "none" ? "" : v,
+                              }))
+                            }
+                          >
+                            <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-[#c9a227]">
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">None</SelectItem>
+                              {cricketRoles.map((role) => (
+                                <SelectItem key={role} value={role}>
+                                  {role}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-                  <div className="text-xs text-muted-foreground">
-                    By signing up you’re creating a member account.
+                {/* Submit Button */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-2">
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    By signing up you're creating a member account.
                   </div>
                   <Button
                     type="submit"
                     disabled={loading || imageUploading}
-                    className="sm:min-w-44 bg-linear-to-r from-[#c9a227] to-[#f0c94a] text-[#0a2e1a] hover:from-[#f0c94a] hover:to-[#c9a227] font-bold"
+                    className="sm:min-w-44 bg-[#c9a227] hover:bg-[#f0c94a] text-[#0a2e1a] font-bold shadow-lg shadow-[#c9a227]/20 hover:shadow-xl transition-all duration-300"
                   >
-                    {loading ? "Creating..." : "Create account"}
+                    {loading ? "Creating..." : "Create Account"}
                   </Button>
                 </div>
               </form>
@@ -639,6 +665,22 @@ export default function SignupPage() {
           </Card>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </main>
   );
 }

@@ -29,7 +29,7 @@ interface GalleryProps {
 
 export default function Gallery({ items = DEFAULT_GALLERY }: GalleryProps) {
   return (
-    <section id="gallery" className="bg-[#134d2e] py-24 px-6 md:px-10 overflow-hidden">
+    <section id="gallery" className="bg-[#134d2e] py-16 md:py-20 px-6 md:px-10 overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <SectionHeader tag="Treasury of Memories" title="Photo Gallery" />
 
@@ -51,7 +51,7 @@ export default function Gallery({ items = DEFAULT_GALLERY }: GalleryProps) {
                 </div>
               ) : (
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${
+                  className={`absolute inset-0 bg-linear-to-br ${
                     FALLBACK_COLORS[i % FALLBACK_COLORS.length]
                   } flex flex-col items-center justify-center transition-transform duration-500 group-hover:scale-105`}
                 >
@@ -66,7 +66,7 @@ export default function Gallery({ items = DEFAULT_GALLERY }: GalleryProps) {
               )}
 
               {/* Bottom Right Corner Info - Always Visible */}
-              <div className="absolute bottom-0 right-0 p-3 bg-gradient-to-tl from-black/80 via-black/50 to-transparent w-full text-right">
+              <div className="absolute bottom-0 right-0 p-3 bg-linear-to-tl from-black/80 via-black/50 to-transparent w-full text-right">
                 <p
                   className="text-white text-sm font-bold"
                   style={{ fontFamily: "'Bebas Neue', sans-serif" }}

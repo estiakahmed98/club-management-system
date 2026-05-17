@@ -87,7 +87,7 @@ export default function Matches({
   matches = DEFAULT_MATCHES,
 }: MatchesProps) {
   return (
-    <section id="matches" className="bg-[#0a2e1a] py-24 px-6 md:px-10">
+    <section id="matches" className="bg-[#0a2e1a] py-16 md:py-20 px-6 md:px-10">
       <div className="max-w-5xl mx-auto">
         <SectionHeader tag="On the Field" title="Match Records" />
 

@@ -17,6 +17,7 @@ import type {
 } from "@/types/club";
 
 import { prisma } from "@/lib/db";
+import MemberMarquee from "@/components/landing/MemberMarquee";
 
 // ─────────────────────────────────────────────────────────────
 // HERO
@@ -124,6 +125,9 @@ export default async function LandingPage() {
       <section id="about">
         <About />
       </section>
+
+      {/* Member Marquee */}
+      <MemberMarquee />
 
       {/* Matches */}
       <section id="matches">
