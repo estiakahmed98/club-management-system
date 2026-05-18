@@ -35,7 +35,7 @@ export default function Hero({ slides = DEFAULT_SLIDES }: HeroProps) {
   }, [current, goSlide]);
 
   return (
-    <section className="relative h-screen min-h-[620px] overflow-hidden flex items-end">
+    <section className="relative h-[90vh] min-h-[520px] overflow-hidden flex items-end">
       {/* Slides */}
       {slides.map((slide, i) => (
         <div

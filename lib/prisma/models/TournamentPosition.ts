@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -210,7 +210,7 @@ export type TournamentPositionGroupByOutputType = {
   _max: TournamentPositionMaxAggregateOutputType | null
 }
 
-export type GetTournamentPositionGroupByPayload<T extends TournamentPositionGroupByArgs> = Prisma.PrismaPromise<
+type GetTournamentPositionGroupByPayload<T extends TournamentPositionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TournamentPositionGroupByOutputType, T['by']> &
       {
@@ -1250,11 +1250,6 @@ export type TournamentPositionFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` TournamentPositions.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of TournamentPositions.
-   */
   distinct?: Prisma.TournamentPositionScalarFieldEnum | Prisma.TournamentPositionScalarFieldEnum[]
 }
 
