@@ -16,7 +16,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./
       dockerfile: Dockerfile.prod
     container_name: fff_frontend_app
     restart: unless-stopped
