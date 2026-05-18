@@ -1,4 +1,19 @@
+version: "3.9"
+
 services:
+  db:
+    image: postgres:16
+    container_name: fff_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: FFFClubManagement
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
   app:
     build:
       context: .
@@ -9,9 +24,13 @@ services:
       - "3001:3000"
     env_file:
       - ./.env.production
+    depends_on:
+      - db
     networks:
       - app-network
-
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  pgdata:
