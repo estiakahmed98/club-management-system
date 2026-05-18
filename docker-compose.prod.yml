@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: fff_frontend_app
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./.env.production
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
