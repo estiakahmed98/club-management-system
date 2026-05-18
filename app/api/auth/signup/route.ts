@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
-import { Prisma, TeamCategory } from "@/lib/prisma/client";
+import { Prisma, TeamCategory } from "@prisma/client";
 
 function isValidTeamCategory(value: unknown): value is TeamCategory {
   return value === "JUNIOR" || value === "SENIOR" || value === "GUEST";

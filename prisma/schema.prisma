@@ -1,8 +1,7 @@
 // Club Management System Database Schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {

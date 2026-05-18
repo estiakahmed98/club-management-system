@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { Prisma, TeamCategory } from "@/lib/prisma/client";
+import { Prisma, TeamCategory } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 interface CreateMemberRequestBody {
