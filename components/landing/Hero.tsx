@@ -5,9 +5,31 @@ import Image from "next/image";
 import type { HeroSlide } from "@/types/club";
 
 const DEFAULT_SLIDES: HeroSlide[] = [
-  { id: "1", imageUrl: "/assets/image.jpeg", title: "Battle on the Field" },
-  { id: "2", imageUrl: "/assets/image1.jpeg", title: "Power of Unity" },
-  { id: "3", imageUrl: "/assets/image3.jpeg", title: "Dream of the Future" },
+  {
+    id: "1",
+    imageUrl: "/assets/image.jpeg",
+    title: "Battle on the Field",
+  },
+  {
+    id: "2",
+    imageUrl: "/assets/image1.jpeg",
+    title: "Power of Unity",
+  },
+  {
+    id: "3",
+    imageUrl: "/assets/image4.jpeg",
+    title: "Youth Development",
+  },
+  {
+    id: "4",
+    imageUrl: "/assets/image3.jpeg",
+    title: "Dream of the Future",
+  },
+  {
+    id: "5",
+    imageUrl: "/assets/image5.jpg",
+    title: "Community Impact",
+  },
 ];
 
 const SLIDE_BG_FALLBACKS = [
@@ -53,6 +75,7 @@ export default function Hero({ slides = DEFAULT_SLIDES }: HeroProps) {
                 sizes="100vw"
                 className="object-cover object-center"
                 priority={i === 0}
+                onError={() => console.log("Image failed:", slide.imageUrl)}
               />
             </div>
           ) : (

@@ -31,17 +31,27 @@ async function getHeroSlides(): Promise<HeroSlide[]> {
     {
       id: "1",
       imageUrl: "/assets/image.jpeg",
-      title: "মাঠের লড়াই",
+      title: "Fight in field",
     },
     {
       id: "2",
       imageUrl: "/assets/image1.jpeg",
-      title: "একতার শক্তি",
+      title: "Unity's power",
     },
     {
       id: "3",
       imageUrl: "/assets/image3.jpeg",
-      title: "ভবিষ্যতের স্বপ্ন",
+      title: "Future's dream",
+    },
+    {
+      id: "4",
+      imageUrl: "/assets/image4.jpeg",
+      title: "Youth Development",
+    },
+    {
+      id: "5",
+      imageUrl: "/assets/image5.jpg",
+      title: "Community Impact",
     },
   ];
 }
