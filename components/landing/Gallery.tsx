@@ -16,11 +16,11 @@ const FALLBACK_ICONS = ["⚽", "🌙", "🏆", "🎉", "🏖️"];
 
 const DEFAULT_GALLERY: GalleryItem[] = [
   { id: "1", title: "FFF Squad in One Frame", imageUrl: "/assets/image.jpeg", description: "Match Day • 2025" },
-  { id: "2", title: "The Senior Football Team", imageUrl: "/assets/image1.jpeg", description: "Club Tournament • 2025" },
-  { id: "3", title: "Throwback Memories", imageUrl: "/assets/image3.jpeg", description: "Founding Days • 2013" },
-  { id: "4", title: "Respect to Senior Members", imageUrl: "/assets/image4.jpeg", description: "Executive Committee • 2019" },
-  { id: "5", title: "Away Match Travel Diary", imageUrl: "/assets/image5.jpeg", description: "Tour & Travel • 2026" },
-  { id: "6", title: "Post Eid-ul-Fitr Congregation", imageUrl: "/assets/image6.jpeg", description: "Community Festival • 2026" },
+  { id: "2", title: "The Senior Football Team", imageUrl: "/assets/SeniorsTeam.jpg", description: "Senior Team • 2025" },
+  { id: "3", title: "Throwback Memories", imageUrl: "/assets/JuniorTeam.jpeg", description: "Junior Team • 2013" },
+  { id: "4", title: "Respect to Senior Members", imageUrl: "/assets/seniors.png", description: "Executive Committee • 2019" },
+  { id: "5", title: "Away Match Travel Diary", imageUrl: "/assets/TourTraval.jpg", description: "Tour & Travel • 2026" },
+  { id: "6", title: "Post Eid-ul-Fitr Congregation", imageUrl: "/assets/EidDay.jpg", description: "Community Festival • 2026" },
 ];
 
 interface GalleryProps {
