@@ -646,7 +646,7 @@ export default function GalleryManagementPage() {
         </Button>
 
         <Select value={folder} onValueChange={setFolder}>
-          <SelectTrigger className="w-full md:w-[280px]">
+          <SelectTrigger className="w-full md:w-[70]">
             <SelectValue placeholder="Folder" />
           </SelectTrigger>
           <SelectContent>
@@ -664,7 +664,7 @@ export default function GalleryManagementPage() {
           value={String(pageSize)}
           onValueChange={(value) => setPageSize(Number(value))}
         >
-          <SelectTrigger className="w-full md:w-[160px]">
+          <SelectTrigger className="w-full md:w-[40]">
             <SelectValue placeholder="Page size" />
           </SelectTrigger>
           <SelectContent>
@@ -725,7 +725,7 @@ export default function GalleryManagementPage() {
       </div>
 
       {loading ? (
-        <div className="flex min-h-[320px] items-center justify-center rounded-lg border bg-card">
+        <div className="flex min-h-80 items-center justify-center rounded-lg border bg-card">
           <div className="w-full max-w-5xl p-6">
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5">
               {Array.from({ length: 20 }).map((_, idx) => (
@@ -746,7 +746,7 @@ export default function GalleryManagementPage() {
           </div>
         </div>
       ) : filteredImages.length === 0 ? (
-        <div className="flex min-h-[320px] flex-col items-center justify-center rounded-lg border bg-card text-center">
+        <div className="flex min-h-80 flex-col items-center justify-center rounded-lg border bg-card text-center">
           <ImageIcon className="mb-3 h-10 w-10 text-muted-foreground" />
           <h2 className="text-lg font-semibold">No images found</h2>
           <p className="mt-1 text-sm text-muted-foreground">
