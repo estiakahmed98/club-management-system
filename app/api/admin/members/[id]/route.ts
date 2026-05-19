@@ -110,6 +110,8 @@ export async function PUT(
           : Number(ratingRaw);
     const imageUrl = body.imageUrl?.trim() || null;
 
+    console.log('imageUrl server action -- ', imageUrl);
+
     if (!name || !email) {
       return NextResponse.json(
         { error: "Name and email are required" },
@@ -168,6 +170,8 @@ export async function PUT(
           ...(imageUrl !== undefined ? { imageUrl } : {}),
         },
       });
+
+      console.log("UPDATED PROFILE:", profile);
 
       return { user, profile };
     });

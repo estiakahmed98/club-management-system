@@ -331,6 +331,8 @@ export default function MembersPage() {
         body: JSON.stringify(payload),
       });
 
+      console.log('response --- ', response);
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || "Failed to save member");
