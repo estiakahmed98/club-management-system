@@ -147,7 +147,7 @@ export default function MemberMarquee() {
 
                 <div className="mx-auto flex h-[260px] max-w-[320px] items-end justify-center md:h-[520px]">
                   <img
-                    src={selectedMember.imageUrl || "/default-player.png"}
+                    src={selectedMember.imageUrl || "/assets/memberimage.png"}
                     alt={selectedMember.name}
                     className="h-full w-full rounded-xl object-cover md:object-contain"
                   />

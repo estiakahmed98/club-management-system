@@ -1,4 +1,9 @@
 // components/MemberCard.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+
+const DEFAULT_MEMBER_IMAGE = "/assets/memberimage.png";
 
 interface Member {
   id: string;
@@ -21,6 +26,12 @@ export default function MemberCard({
   member: Member;
   onClick?: () => void;
 }) {
+  const [imgSrc, setImgSrc] = useState(member.imageUrl || DEFAULT_MEMBER_IMAGE);
+
+  useEffect(() => {
+    setImgSrc(member.imageUrl || DEFAULT_MEMBER_IMAGE);
+  }, [member.imageUrl]);
+
   return (
     <button
       type="button"
@@ -29,19 +40,12 @@ export default function MemberCard({
     >
       {/* Image Section */}
       <div className="relative flex h-[240px] sm:h-[260px] md:h-[280px] items-center justify-center overflow-hidden bg-gradient-to-b from-[#4d6b4f] to-[#90a77d]">
-        {member.imageUrl ? (
-          <img
-            src={member.imageUrl}
-            alt={member.name}
-            className="h-full w-full object-cover object-center transition duration-300 hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#0a2e1a] to-[#134d2e]">
-            <span className="text-6xl font-black text-[#c9a227]/30">
-              {member.name?.charAt(0)?.toUpperCase() || "?"}
-            </span>
-          </div>
-        )}
+        <img
+          src={imgSrc}
+          alt={member.name}
+          className="h-full w-full object-cover object-center transition duration-300 hover:scale-105"
+          onError={() => setImgSrc(DEFAULT_MEMBER_IMAGE)}
+        />
 
         {/* Jersey Number */}
         {member.jerseyNumber && (
